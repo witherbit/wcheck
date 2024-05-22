@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\favicon512.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\favicon512.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wcontrols\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dragablz" Version="0.0.3.234" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+</Project>

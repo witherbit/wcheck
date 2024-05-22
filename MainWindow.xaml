@@ -1,0 +1,337 @@
+﻿<Window x:Class="wcheck.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:wcheck"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+    mc:Ignorable="d"
+    x:Name="window"
+    Title="wcheck"
+    Width="1000"
+    Height="600"
+    MinWidth="800"
+    MinHeight="450"
+    BorderThickness="{Binding RelativeSource={RelativeSource Mode=Self}, Path=WindowState, Converter={StaticResource windowstateToThicknessConverter}}"
+    ResizeMode="CanResize"
+    WindowStyle="None" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Separator}">
+            <Setter Property="Margin" Value="0,3,0,3" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Grid>
+                            <Rectangle Height="1" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type MenuItem}">
+            <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="Col0" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuTextColumnGroup"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGTColumnGroup"/>
+                                    <ColumnDefinition x:Name="Col3" Width="14"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- ContentPresenter to show an Icon if needed -->
+                                <ContentPresenter Grid.Column="0" Margin="4,0,6,0" x:Name="Icon" VerticalAlignment="Center" ContentSource="Icon"/>
+                                <!-- Glyph is a checkmark if needed for a checkable menu -->
+                                <Grid Grid.Column="0" Visibility="Hidden" Margin="4,0,6,0" x:Name="GlyphPanel" VerticalAlignment="Center">
+                                    <Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight"/>
+                                </Grid>
+                                <!-- Content for the menu text etc -->
+                                <ContentPresenter Grid.Column="1"
+                                            Margin="{TemplateBinding Padding}"
+                                            x:Name="HeaderHost"
+                                            RecognizesAccessKey="True"
+                                            ContentSource="Header"/>
+                                <!-- Content for the menu IGT -->
+                                <ContentPresenter Grid.Column="2"
+                                            Margin="8,1,8,1"
+                                            x:Name="IGTHost"
+                                            ContentSource="InputGestureText"
+                                            VerticalAlignment="Center"/>
+                                <!-- Arrow drawn path which points to the next level of the menu -->
+                                <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
+                                    <Path x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 z"/>
+                                </Grid>
+                                <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="SubMenuPopup" Focusable="false" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                                    <Border x:Name="SubMenuBorder" BorderBrush="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderThickness="1" Padding="2,2,2,2">
+                                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
+                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                        <ControlTemplate.Triggers>
+                            <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                            <Trigger Property="Role" Value="TopLevelHeader">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Placement" Value="Bottom" TargetName="SubMenuPopup"/>
+                                <Setter Property="MinWidth" Value="0" TargetName="Col0"/>
+                                <Setter Property="Width" Value="Auto" TargetName="Col3"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="IGTHost"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+                            <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
+                            <Trigger Property="Role" Value="TopLevelItem">
+                                <Setter Property="Padding" Value="6,1,6,1"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+                            <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                            </Trigger>
+                            <!-- Role = SubMenuItem : this is a child menu item which has children-->
+                            <Trigger Property="Role" Value="SubmenuItem">
+                                <Setter Property="DockPanel.Dock" Value="Top"/>
+                                <Setter Property="Padding" Value="0,2,0,2"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="ArrowPanel"/>
+                            </Trigger>
+                            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                                <Setter Property="PopupAnimation" Value="None" TargetName="SubMenuPopup"/>
+                            </Trigger>
+                            <!-- If no Icon is present the we collapse the Icon Content -->
+                            <Trigger Property="Icon" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+                            <!-- The GlyphPanel contains the CheckMark -->
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Visibility" Value="Visible" TargetName="GlyphPanel"/>
+                                <Setter Property="Visibility" Value="Collapsed" TargetName="Icon"/>
+                            </Trigger>
+                            <!-- Using the system colors for the Menu Highlight and IsEnabled-->
+                            <Trigger Property="IsHighlighted" Value="true">
+                                <Setter Property="Background" Value="{StaticResource TitleBarButtonHoverBackground}" TargetName="Border"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{StaticResource TitleBarButtonHoverBackground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CornerRadius="0"
+            GlassFrameThickness="0,0,0,0"
+            NonClientFrameEdges="None"
+            ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
+            UseAeroCaptionButtons="False">
+            <WindowChrome.CaptionHeight>
+                <MultiBinding Converter="{StaticResource captionHeightConverter}">
+                    <Binding ElementName="titlebar" Path="ActualHeight" />
+                    <Binding ElementName="window" Path="BorderThickness.Top" />
+                </MultiBinding>
+            </WindowChrome.CaptionHeight>
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+
+    <Grid x:Name="rootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="titlebar"
+            Grid.Row="0"
+            MinHeight="{StaticResource TitleBarHeight}"
+            Background="{StaticResource TitleBarBackground}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="40"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  remove or set Visibility="Collapsed" if you don't want to display an icon  -->
+            <!--<Image
+                x:Name="icon"
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="5,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                MouseDown="Icon_MouseDown"
+                Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Icon}"
+                WindowChrome.IsHitTestVisibleInChrome="True" />-->
+
+            <DockPanel Grid.Column="1" HorizontalAlignment="Stretch">
+                <Menu
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    Foreground="White"
+                    DockPanel.Dock="Left"
+                    FontFamily="Arial"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <MenuItem Name="uiMenuItem_0" Background="{StaticResource TitleBarBackground}" Foreground="White">
+                        <MenuItem.Header>
+                            <TextBlock FontFamily="Arial Black">
+        <Run>
+        <Run.Foreground>
+            <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                <GradientStop Color="{StaticResource PrimaryForegroundColor}"/>
+                <GradientStop Color="#dfdfdf" Offset="1"/>
+            </LinearGradientBrush>
+        </Run.Foreground>wcheck</Run>
+    <Run Foreground="{StaticResource PrimaryForeground}"></Run>
+                            </TextBlock>
+                        </MenuItem.Header>
+                        <MenuItem Header="Новое задание"
+                                  Name="uiMenuItem_0x0"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                        <MenuItem Header="Импортировать задание из файла"
+                                  Name="uiMenuItem_0x1"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                        <MenuItem Name="uiMenuItem_0x2"
+                                  Header="Сохранить задание в файл"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                        <Separator />
+                        <MenuItem Header="Настройки"
+                                  Name="uiMenuItem_0x3"
+                                  Click="MenuItem_Click"
+                                  />
+                        <MenuItem
+                            Name="uiMenuItem_0x4"
+                            Click="MenuItem_Click"
+                            Header="Выход"
+                            InputGestureText="Alt+F4"
+                            />
+                    </MenuItem>
+                    <MenuItem Header="Модули" Name="uiMenuItem_1">
+                        <MenuItem Header="Центр обновлений"
+                                  Name="uiMenuItem_1x0"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                        <MenuItem Header="Список модулей"
+                                  Name="uiMenuItem_1x1"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                    </MenuItem>
+                    <MenuItem Header="Вид" Name="uiMenuItem_2">
+                        <MenuItem Header="Развернуть на весь экран"
+                                  Click="MenuItem_Click"
+                                  Name="uiMenuItem_2x0"
+                                  />
+                        <MenuItem Header="Свернуть"
+                                  Name="uiMenuItem_2x1"
+                                  Click="MenuItem_Click"
+                                  />
+                    </MenuItem>
+                    <MenuItem Header="Лицензия" Name="uiMenuItem_3">
+                        <MenuItem Header="Обновить данные лицензии"
+                                  Name="uiMenuItem_3x0"
+                                  Click="MenuItem_Click"
+                                  />
+                        <MenuItem Header="Сведения об лицензии"
+                                  Name="uiMenuItem_3x1"
+                                  IsEnabled="False"
+                                  Click="MenuItem_Click"
+                                  />
+                    </MenuItem>
+                    <MenuItem Header="Справка" Name="uiMenuItem_4">
+                        <MenuItem Header="Руководство по экплуатации" 
+                                  Name="uiMenuItem_4x0"
+                                  />
+                        <MenuItem Header="Документация" 
+                                  Name="uiMenuItem_4x1"
+                                  />
+                        <Separator />
+                        <MenuItem Header="Обратная связь" 
+                                  Name="uiMenuItem_4x2"
+                                  />
+                        <Separator />
+                        <MenuItem Header="О программе" 
+                                  Name="uiMenuItem_4x3"
+                                  />
+                    </MenuItem>
+                </Menu>
+
+            </DockPanel>
+
+            <!--  standard system buttons (minimize, maximize/restore, close)  -->
+            <Button
+                Grid.Column="3"
+                Click="OnMinimizeButtonClick"
+                Style="{StaticResource TitleBarButtonStyle}"
+                ToolTip="Свернуть">
+                <Path
+                    Width="20"
+                    Height="20"
+                    Data="M 5 15 H 15"
+                    Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                    StrokeThickness="2" />
+            </Button>
+
+            <Button
+                x:Name="maximizeRestoreButton"
+                Grid.Column="4"
+                Click="OnMaximizeRestoreButtonClick"
+                Style="{StaticResource TitleBarButtonStyle}"
+                ToolTip="Развернуть"
+                ToolTipOpening="maximizeRestoreButton_ToolTipOpening">
+                <Path
+                    Width="20"
+                    Height="20"
+                    Data="M 6 6 L 6 15 L 15 15 L 15 6 L 5 6"
+                    Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                    StrokeThickness="2" />
+            </Button>
+
+            <Button
+                Grid.Column="5"
+                Click="OnCloseButtonClick"
+                Style="{StaticResource TitleBarCloseButtonStyle}"
+                ToolTip="Выход">
+                <Path
+                    Width="20"
+                    Height="20"
+                    Data="M 6 6 L 15 15 M 6 15 L 15 6"
+                    Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                    StrokeThickness="2" />
+            </Button>
+        </Grid>
+
+        <!--content-->
+        <dragablz:TabablzControl Grid.Row="1" Name="uiTabController" Background="Transparent" FontFamily="Arial" IsHeaderPanelVisible="True" Foreground="White">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController/>
+            </dragablz:TabablzControl.InterTabController>
+        </dragablz:TabablzControl>
+        <!--<Frame Grid.Row="1" Name="uiContent"/>-->
+    </Grid>
+</Window>
