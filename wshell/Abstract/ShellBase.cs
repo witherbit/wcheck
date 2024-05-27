@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wcheck.wcontrols;
 using wcheck.wshell.Objects;
 using wshell.Core;
 using wshell.Enums;
@@ -17,7 +18,7 @@ namespace wshell.Abstract
         public ShellState State { get; private set; }
         public ShellCallback Callback { get; internal set; }
 
-        public List<SettingsObject> Settings { get; }
+        public ShellSettings Settings { get; protected set; }
 
         public Guid ContractId { get; internal set; }
 
@@ -26,12 +27,8 @@ namespace wshell.Abstract
         public event EventHandler<Guid> ShellPause;
         public event EventHandler<Guid> ShellResume;
 
-        public ShellBase(ShellInfo info, List<SettingsObject> settings = null)
+        public ShellBase(ShellInfo info)
         {
-            if(settings == null)
-                Settings = new List<SettingsObject>();
-            else
-                Settings = settings;
             ShellInfo = info;
             State = ShellState.Stopped;
         }
@@ -83,6 +80,7 @@ namespace wshell.Abstract
         public abstract void OnStop();
         public abstract void OnResume();
 
-        public abstract void OnHostCallback(Schema shcema);
+        public abstract Schema OnHostCallback(Schema schema);
+        public abstract void OnSettingsEdit(SettingsObject obj, PropertyEventArgs propertyEventArgs);
     }
 }

@@ -8,45 +8,68 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Настройки" Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="40"/>
+        </Grid.ColumnDefinitions>
 
-    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="uiSettingsPanel">
-            <Expander>
-                <Expander.Header>
-                    <TextBlock Text="Директории" Foreground="#1f1f1f" FontFamily="Arial"/>
-                </Expander.Header>
-                <StackPanel>
-                    <control:WProperty Margin="5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\XSD" Text="Путь к директории XSD схематик" WWrap="NoWrap" x:Name="uiPropPathXSD"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\tmp" Text="Путь к директории временных файлов" WWrap="NoWrap" x:Name="uiPropPathTemp"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\log" Text="Путь к директории логов" WWrap="NoWrap" x:Name="uiPropPathLog"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\shell" Text="Путь к директории модулей" WWrap="NoWrap" x:Name="uiPropPathShell"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\shell\sha" Text="URI репозитория целостности модулей" WWrap="NoWrap" x:Name="uiPropPathShellSha"/>
-                </StackPanel>
-            </Expander>
-            <Expander>
-                <Expander.Header>
-                    <TextBlock Text="Модули" Foreground="#1f1f1f" FontFamily="Arial"/>
-                </Expander.Header>
-                <StackPanel>
-                    <control:WProperty Margin="5" WPropertyType="TextBox" WPlaceholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" Text="Разрешенные модули" WWrap="Wrap" x:Name="uiPropShellAccepted"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="CheckBox" Text="Проверять целостность модулей" x:Name="uiPropShellSha"/>
-                </StackPanel>
-            </Expander>
-            <Expander>
-                <Expander.Header>
-                    <TextBlock Text="Сетевое взаимодействие" Foreground="#1f1f1f" FontFamily="Arial"/>
-                </Expander.Header>
-                <StackPanel>
-                    <control:WProperty Margin="5" WPropertyType="ComboBox" Text="Тип подключения" WSelectedIndex="0" x:Name="uiPropConType">
-                        <control:WProperty.ComboBoxItems>
-                            <ComboBoxItem Content="Сервер"/>
-                            <ComboBoxItem Content="Клиент"/>
-                        </control:WProperty.ComboBoxItems>
-                    </control:WProperty>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="CheckBox" Text="Использовать защищенное подключение" WChecked="True" x:Name="uiPropConUseEnc"/>
-                    <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: 11144" Text="Порт сервиса" WWrap="Wrap" x:Name="uiPropConPort"/>
-                </StackPanel>
-            </Expander>
-        </StackPanel>
-    </ScrollViewer>
+        <Grid Grid.Column="1" Background="#1f1f1f" Margin="0 15"/>
+
+        <Button Grid.Column="2" Height="30" Width="30" Margin="5" Click="uiCloseTab_Click" Foreground="#fca577" Background="#1f1f1f" ToolTip="Закрыть вкладку" x:Name="uiCloseTab" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignCloseItemCommandButtonStyle}">
+
+        </Button>
+
+        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" Grid.Column="0">
+            <StackPanel x:Name="uiSettingsPanel">
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="Директории" Foreground="#1f1f1f" FontFamily="Arial"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <control:WProperty Margin="5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\XSD" Text="Путь к директории XSD схематик" WWrap="NoWrap" x:Name="uiPropPathXSD"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\tmp" Text="Путь к директории временных файлов" WWrap="NoWrap" x:Name="uiPropPathTemp"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\log" Text="Путь к директории логов" WWrap="NoWrap" x:Name="uiPropPathLog"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\shell" Text="Путь к директории модулей" WWrap="NoWrap" x:Name="uiPropPathShell"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: https://raw.githubusercontent.com/witherbit/wcheck/master/wshell/Repos/sha.rep" Text="URI репозитория целостности модулей" WWrap="NoWrap" x:Name="uiPropPathShellSha"/>
+                    </StackPanel>
+                </Expander>
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="Модули" Foreground="#1f1f1f" FontFamily="Arial"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <control:WProperty Margin="5" WPropertyType="TextBox" WPlaceholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" Text="Разрешенные модули" WWrap="Wrap" x:Name="uiPropShellAccepted"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="CheckBox" Text="Проверять целостность модулей" x:Name="uiPropShellSha"/>
+                    </StackPanel>
+                </Expander>
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="Сетевое взаимодействие" Foreground="#1f1f1f" FontFamily="Arial"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <control:WProperty Margin="5" WPropertyType="ComboBox" Text="Тип подключения" WSelectedIndex="0" x:Name="uiPropConType">
+                            <control:WProperty.ComboBoxItems>
+                                <ComboBoxItem Content="Сервер"/>
+                                <ComboBoxItem Content="Клиент"/>
+                            </control:WProperty.ComboBoxItems>
+                        </control:WProperty>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="ComboBox" Text="Способ шифрования" WSelectedIndex="0" x:Name="uiPropConEncType">
+                            <control:WProperty.ComboBoxItems>
+                                <ComboBoxItem Content="AES"/>
+                                <ComboBoxItem Content="RSA (не реализовано)" IsEnabled="False"/>
+                                <ComboBoxItem Content="AES/Curve25519 (не реализовано)" IsEnabled="False"/>
+                                <ComboBoxItem Content="AES/Curve25519/Ed25519 (не реализовано)" IsEnabled="False"/>
+                            </control:WProperty.ComboBoxItems>
+                        </control:WProperty>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="key.xml" Text="Путь к файлу ключа шифрования" WWrap="Wrap" x:Name="uiPropConEncKey"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="CheckBox" Text="Использовать защищенное подключение" x:Name="uiPropConUseEnc"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: 11144" Text="Порт сервиса" WWrap="Wrap" x:Name="uiPropConPort"/>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
 </Page>

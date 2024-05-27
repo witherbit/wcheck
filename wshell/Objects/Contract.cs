@@ -48,9 +48,9 @@ namespace wshell.Objects
             }
         }
 
-        public void Invoke(Schema schema)
+        public Schema Invoke(Schema schema)
         {
-            _shell.OnHostCallback(schema);
+            return _shell.OnHostCallback(schema);
         }
     }
 }

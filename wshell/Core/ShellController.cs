@@ -6,27 +6,30 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using wshell.Abstract;
+using wshell.Objects;
 
 namespace wshell.Core
 {
     internal class ShellController
     {
         private List<ShellBase> _shells = new List<ShellBase>();
+        private List<ShellInfo> _deniedIds = new List<ShellInfo>();
         public ContractStore ContractStore { get; }
         public ShellBase[] Shells { get => _shells.Count < 1 ? Array.Empty<ShellBase>() : _shells.ToArray(); }
+        public ShellInfo[] DeniedIds { get => _deniedIds.Count < 1 ? Array.Empty<ShellInfo>() : _deniedIds.ToArray(); }
 
         public ShellController()
         {
             ContractStore = new ContractStore();
         }
 
-        public void LoadAll(string directory)
+        public void LoadAll(string directory, string allowedIds)
         {
             foreach (var file in Directory.EnumerateFiles(directory, "*.dll", SearchOption.AllDirectories))
-                LoadByPath(file);
+                LoadByPath(file, allowedIds);
         }
 
-        public void LoadByPath(string path)
+        public void LoadByPath(string path, string allowedIds)
         {
             try
             {
@@ -37,7 +40,17 @@ namespace wshell.Core
                     {
                         var shell = shellAssembly.CreateInstance(type.FullName) as ShellBase;
                         if (shell != null && _shells.FirstOrDefault(x => x.ShellInfo.Id == shell.ShellInfo.Id) == null)
-                            _shells.Add(shell);
+                        {
+                            if (allowedIds.Contains(shell.ShellInfo.Id.ToString()))
+                            {
+                                _shells.Add(shell);
+                            }
+                            else
+                            {
+                                _deniedIds.Add(shell.ShellInfo);
+                            }
+                        }
+                            
                     }
                 }
             }

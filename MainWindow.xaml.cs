@@ -36,61 +36,56 @@ namespace wcheck
             {
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterPath.p_PathToXds,
                     Value = Consts.ParameterPath.v_PathToXds,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterPath.p_PathToTemp,
                     Value = Consts.ParameterPath.v_PathToTemp,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterPath.p_PathToLog,
                     Value = Consts.ParameterPath.v_PathToLog,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterPath.p_PathToShell,
                     Value = Consts.ParameterPath.v_PathToShell,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterPath.p_PathToShellSha,
                     Value = Consts.ParameterPath.v_PathToShellSha,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(string),
                     Name = Consts.ParameterShell.p_AcceptedShell,
                     Value = Consts.ParameterShell.v_AcceptedShell,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(bool),
                     Name = Consts.ParameterShell.p_CheckShell,
                     Value = Consts.ParameterShell.v_CheckShell,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(int),
                     Name = Consts.ParameterConnection.p_Type,
                     Value = Consts.ParameterConnection.v_Type,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(bool),
+                    Name = Consts.ParameterConnection.p_EncPath,
+                    Value = string.Empty,
+                },
+                new SettingsObject
+                {
                     Name = Consts.ParameterConnection.p_UseEnc,
                     Value = Consts.ParameterConnection.v_UseEnc,
                 },
                 new SettingsObject
                 {
-                    Type = typeof(bool),
                     Name = Consts.ParameterConnection.p_Port,
                     Value = Consts.ParameterConnection.v_Port,
                 },

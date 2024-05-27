@@ -1,24 +1,30 @@
 ﻿using Dragablz;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using wcheck.Pages;
 using wcheck.wcontrols;
+using wcheck.wshell.Enums;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
 using wshell.Core;
+using wshell.Enums;
+using wshell.Objects;
 
 namespace wcheck
 {
     internal class ShellHost : IHost
     {
-        public static MainSettings Settings { get; set; }
+        public static ShellSettings Settings { get; set; }
         public MainWindow HostWindow { get; private set; }
         public static ShellHost Instance { get; private set; }
         public ShellCallback Callback { get; private set; }
@@ -32,12 +38,58 @@ namespace wcheck
 
         public ShellHost(MainWindow mainWindow, List<SettingsObject> defaultSettings)
         {
-            Settings = MainSettings.Load(defaultSettings);
+            Settings = ShellSettings.Load("23aca232-542a-4716-b51a-fe050de5fcb9", defaultSettings);
+            CreateDir();
             Instance = this;
             HostWindow = mainWindow;
             Callback = new ShellCallback();
+
             Controller = new ShellController();
+            Controller.LoadAll(Settings.GetValue<string>(Consts.ParameterPath.p_PathToShell), Settings.GetValue<string>(Consts.ParameterShell.p_AcceptedShell));
+            if (Controller.Shells.Length > 0)
+                Controller.RegisterAll(this);
+
+            Callback.Callback += OnCallback;
+            Callback.RequestCallback += OnRequestCallback;
+
+            UpdateShellMenu();
+
             Items = new List<TabItem>();
+        }
+
+        private Schema OnRequestCallback(ShellBase shell, Schema schema)
+        {
+            switch (schema.Type)
+            {
+                case CallbackType.ReloadPageRequest:
+                    shell.Stop();
+                    return new Schema(CallbackType.ReloadPageResponse).SetProviding(schema.GetProviding<Page>());
+
+                case CallbackType.ShellInfosRequest:
+                    List<ShellInfo> infs = new List<ShellInfo>();
+                    foreach (var shl in Controller.Shells)
+                        infs.Add(shl.ShellInfo);
+                    return new Schema(CallbackType.ShellInfosResponse).SetProviding(infs.ToArray());
+
+                case CallbackType.GetShellInstanceRequest:
+                    return new Schema(CallbackType.GetShellInstanceResponse).SetProviding(Controller.GetShellById(schema.GetProviding<ShellInfo>().Id));
+
+                default:
+                    return new Schema(CallbackType.EmptyResponse);
+            }
+        }
+
+        private void OnCallback(ShellBase shell, Schema schema)
+        {
+            switch (schema.Type)
+            {
+                case CallbackType.RegisterPage:
+                    AddPage(schema.GetProviding<Page>());
+                    break;
+                case CallbackType.UnregisterPage:
+                    ClosePage(schema.GetProviding<Page>());
+                    break;
+            }
         }
 
         private static Border GetBorderTab(string header)
@@ -76,7 +128,8 @@ namespace wcheck
 
         public static void AddPage(Page page, string title = null)
         {
-            if (Items.FirstOrDefault(x => ((x.Header as Border).Child as TextBlock).Text == page.Title) != null)
+            var item = Items.FirstOrDefault(x => ((x.Header as Border).Child as TextBlock).Text == page.Title);
+            if (item != null)
             {
                 MessageBox.Show("Вы уже открыли эту страницу", "Ошибка");
                 return;
@@ -114,6 +167,74 @@ namespace wcheck
         public static void Invoke(Action callback)
         {
             Instance.HostWindow.Invoke(callback);
+        }
+
+        public static Schema InvokeRequest(ShellBase shell, Schema schema)
+        {
+            var result = Instance.ContractStore.Get(shell);
+            return result.Contract.Invoke(schema);
+        }
+
+        private void CreateDir()
+        {
+            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToXds));
+            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToTemp));
+            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToLog));
+            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToShell));
+        }
+
+        private void UpdateShellMenu()
+        {
+            var backgrounds = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.Background).ToList();
+            var tasks = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.Task).ToList();
+            var taskViews = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.TaskView).ToList();
+            var views = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.View).ToList();
+            if(backgrounds.Count > 0)
+            {
+                HostWindow.uiMenuItem_1.Items.Add(new Separator());
+                foreach(var item in backgrounds)
+                {
+                    HostWindow.uiMenuItem_1.Items.Add(new MenuItem
+                    {
+                        Header = item.ShellInfo.Name + " (Фоновый)",
+                    });
+                }
+            }
+            if (tasks.Count > 0)
+            {
+                HostWindow.uiMenuItem_1.Items.Add(new Separator());
+                foreach (var item in tasks)
+                {
+                    var menuItem = new MenuItem
+                    {
+                        Header = item.ShellInfo.Name + " (Задача)",
+                    };
+                    menuItem.Click += (s, e) => { item.Run(); };
+                    HostWindow.uiMenuItem_1.Items.Add(menuItem);
+                }
+            }
+            if (taskViews.Count > 0)
+            {
+                HostWindow.uiMenuItem_1.Items.Add(new Separator());
+                foreach (var item in taskViews)
+                {
+                    HostWindow.uiMenuItem_1.Items.Add(new MenuItem
+                    {
+                        Header = item.ShellInfo.Name + " (Компонент задачи)",
+                    });
+                }
+            }
+            if (views.Count > 0)
+            {
+                HostWindow.uiMenuItem_1.Items.Add(new Separator());
+                foreach (var item in views)
+                {
+                    HostWindow.uiMenuItem_1.Items.Add(new MenuItem
+                    {
+                        Header = item.ShellInfo.Name + " (Компонент)",
+                    });
+                }
+            }
         }
     }
 }

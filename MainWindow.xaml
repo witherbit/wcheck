@@ -236,10 +236,11 @@
                                   Name="uiMenuItem_1x0"
                                   IsEnabled="False"
                                   Click="MenuItem_Click"
+                                  Visibility="Collapsed"
                                   />
                         <MenuItem Header="Список модулей"
                                   Name="uiMenuItem_1x1"
-                                  IsEnabled="False"
+                                  IsEnabled="True"
                                   Click="MenuItem_Click"
                                   />
                     </MenuItem>

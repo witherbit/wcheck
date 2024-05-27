@@ -66,6 +66,8 @@ namespace wcheck.wcontrols
 
         public bool? WChecked { get => uiCheckBox.IsChecked; set => uiCheckBox.IsChecked = value; }
 
+        public PropertyEventArgs WPropertyArgs { get; set; }
+
         public TextWrapping WWrap
         {
             get => uiTextBox.TextWrapping;
@@ -89,42 +91,46 @@ namespace wcheck.wcontrols
         private void uiCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             if (_propertyType != PropertyType.CheckBox) return;
-            WPropertyChanged?.Invoke(this, new PropertyEventArgs
+            WPropertyArgs = new PropertyEventArgs
             {
                 Type = _propertyType,
                 Checked = uiCheckBox.IsChecked
-            });
+            };
+            WPropertyChanged?.Invoke(this, WPropertyArgs);
         }
 
         private void uiComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_propertyType != PropertyType.ComboBox) return;
-            WPropertyChanged?.Invoke(this, new PropertyEventArgs
+            WPropertyArgs = new PropertyEventArgs
             {
                 Type = _propertyType,
                 ComboBoxItem = uiComboBox.SelectedItem,
                 SelectedIndex = uiComboBox.SelectedIndex
-            });
+            };
+            WPropertyChanged?.Invoke(this, WPropertyArgs);
         }
 
         private void uiTextBox_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (_propertyType != PropertyType.TextBox) return;
-            WPropertyChanged?.Invoke(this, new PropertyEventArgs
+            WPropertyArgs = new PropertyEventArgs
             {
                 Type = _propertyType,
                 Text = uiTextBox.Text,
-            });
+            };
+            WPropertyChanged?.Invoke(this, WPropertyArgs);
         }
 
         private void uiTextBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (_propertyType != PropertyType.TextBox) return;
-            WPropertyChanged?.Invoke(this, new PropertyEventArgs
+            WPropertyArgs = new PropertyEventArgs
             {
                 Type = _propertyType,
                 Text = uiTextBox.Text,
-            });
+            };
+            WPropertyChanged?.Invoke(this, WPropertyArgs);
         }
     }
 

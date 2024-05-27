@@ -10,8 +10,12 @@ namespace wcheck.wshell.Objects
     [BitSerializable]
     public class SettingsObject
     {
-        public Type Type { get; set; }
         public string Name { get; set; }
         public object Value { get; set; }
+
+        public Type Type { get => Value.GetType(); }
+
+        public string ViewName { get; set; }
+        public string ViewAdditional { get; set; }
     }
 }

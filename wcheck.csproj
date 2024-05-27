@@ -33,5 +33,7 @@
   <ItemGroup>
     <Folder Include="Windows\" />
     <Folder Include="wshell\Repos\" />
+    <Folder Include="wshell\Ui\" />
+    <Folder Include="wshell\Net\" />
   </ItemGroup>
 </Project>

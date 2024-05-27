@@ -11,8 +11,8 @@ namespace wshell.Core
 {
     public class ShellCallback
     {
-        public delegate void ShellInvoke(ShellBase shell, Schema shcema);
-        public delegate Schema ShellInvokeRequest(ShellBase shell, Schema shcema);
+        public delegate void ShellInvoke(ShellBase shell, Schema schema);
+        public delegate Schema ShellInvokeRequest(ShellBase shell, Schema schema);
 
         //public delegate void HostInvoke(ShellInfo info, object obj);
         //public delegate object HostInvokeRequest(ShellInfo info, object obj);
@@ -23,14 +23,14 @@ namespace wshell.Core
         //public event HostInvoke HostInvokeCallback;
         //public event HostInvokeRequest HostInvokeReturnedCallback;
 
-        public void Invoke(ShellBase shell, Schema shcema)
+        public void Invoke(ShellBase shell, Schema schema)
         {
-            Callback?.Invoke(shell, shcema);
+            Callback?.Invoke(shell, schema);
         }
 
-        public Schema InvokeRequest(ShellBase shell, Schema shcema)
+        public Schema InvokeRequest(ShellBase shell, Schema schema)
         {
-            return RequestCallback?.Invoke(shell, shcema);
+            return RequestCallback?.Invoke(shell, schema);
         }
 
         //public void HostInvokeNative(ShellInfo info, object obj, Guid id)

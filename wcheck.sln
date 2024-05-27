@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wcheck", "wcheck.csproj", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wScapTest", "..\wScapTest\wScapTest.csproj", "{1F1B1B7E-2CFD-44DD-981E-F5ACB578C488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task.ispd.shellv1", "..\task.ispd.shellv1\task.ispd.shellv1.csproj", "{2AE9274A-1562-4618-A345-69B76D8A8ED8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "task.ispd.shellv1", "..\task.ispd.shellv1\task.ispd.shellv1.csproj", "{2AE9274A-1562-4618-A345-69B76D8A8ED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tview.scapproc.shellv1", "..\tview.scapproc.shellv1\tview.scapproc.shellv1.csproj", "{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{2AE9274A-1562-4618-A345-69B76D8A8ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AE9274A-1562-4618-A345-69B76D8A8ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AE9274A-1562-4618-A345-69B76D8A8ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
