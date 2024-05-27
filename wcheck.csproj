@@ -32,5 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Windows\" />
+    <Folder Include="wshell\Repos\" />
   </ItemGroup>
 </Project>
