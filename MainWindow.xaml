@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:wcheck"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+    xmlns:themes="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     x:Name="window"
     Title="wcheck"
@@ -252,7 +253,7 @@
                                   Click="MenuItem_Click"
                                   />
                     </MenuItem>
-                    <MenuItem Header="Лицензия" Name="uiMenuItem_3">
+                    <MenuItem Header="Лицензия" Name="uiMenuItem_3" Visibility="Collapsed">
                         <MenuItem Header="Обновить данные лицензии"
                                   Name="uiMenuItem_3x0"
                                   Click="MenuItem_Click"
@@ -266,17 +267,21 @@
                     <MenuItem Header="Справка" Name="uiMenuItem_4">
                         <MenuItem Header="Руководство по экплуатации" 
                                   Name="uiMenuItem_4x0"
+                                  Click="MenuItem_Click"
                                   />
                         <MenuItem Header="Документация" 
                                   Name="uiMenuItem_4x1"
+                                  Click="MenuItem_Click"
                                   />
                         <Separator />
                         <MenuItem Header="Обратная связь" 
                                   Name="uiMenuItem_4x2"
+                                  Click="MenuItem_Click"
                                   />
                         <Separator />
                         <MenuItem Header="О программе" 
                                   Name="uiMenuItem_4x3"
+                                  Click="MenuItem_Click"
                                   />
                     </MenuItem>
                 </Menu>
@@ -327,10 +332,15 @@
         </Grid>
 
         <!--content-->
-        <dragablz:TabablzControl Grid.Row="1" Name="uiTabController" Background="Transparent" FontFamily="Arial" IsHeaderPanelVisible="True" Foreground="White">
-            <dragablz:TabablzControl.InterTabController>
-                <dragablz:InterTabController/>
-            </dragablz:TabablzControl.InterTabController>
+        <dragablz:TabablzControl SelectionChanged="uiTabController_SelectionChanged" Grid.Row="1" Name="uiTabController" Background="Transparent" FontFamily="Arial" IsHeaderPanelVisible="True" Foreground="White">
+            <dragablz:TabablzControl.ItemContainerStyle>
+                <Style BasedOn="{StaticResource MaterialDesignDragableTabItemStyle}" TargetType="{x:Type dragablz:DragablzItem}">
+                    <Setter Property="Height" Value="26" />
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="MinWidth" Value="5"/>
+                    <Setter Property="MinHeight" Value="5"/>
+                </Style>
+            </dragablz:TabablzControl.ItemContainerStyle>
         </dragablz:TabablzControl>
         <!--<Frame Grid.Row="1" Name="uiContent"/>-->
     </Grid>

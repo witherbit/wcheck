@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:wcheck.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="LicenseUpdatePage">
+      Title="Лицензирование">
 
     <Grid>
         

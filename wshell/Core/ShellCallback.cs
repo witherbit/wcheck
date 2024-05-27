@@ -12,7 +12,7 @@ namespace wshell.Core
     public class ShellCallback
     {
         public delegate void ShellInvoke(ShellBase shell, Schema shcema);
-        public delegate object ShellInvokeRequest(ShellBase shell, Schema shcema);
+        public delegate Schema ShellInvokeRequest(ShellBase shell, Schema shcema);
 
         //public delegate void HostInvoke(ShellInfo info, object obj);
         //public delegate object HostInvokeRequest(ShellInfo info, object obj);
@@ -28,7 +28,7 @@ namespace wshell.Core
             Callback?.Invoke(shell, shcema);
         }
 
-        public object InvokeRequest(ShellBase shell, Schema shcema)
+        public Schema InvokeRequest(ShellBase shell, Schema shcema)
         {
             return RequestCallback?.Invoke(shell, shcema);
         }

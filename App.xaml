@@ -24,10 +24,13 @@
                     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#1f1f1f"/>
                     <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="White"/>
                 </ResourceDictionary>
-
+                <ResourceDictionary Source="Styles/ScrollBarStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ExpanderStyle.xaml"/>
+                <ResourceDictionary Source="Styles/TextBoxStyle.xaml"/>
+                <ResourceDictionary Source="Styles/CheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ComboBoxStyle.xaml"/>
                 <!-- Include the Dragablz Material Design style -->
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
-
             </ResourceDictionary.MergedDictionaries>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
@@ -138,11 +141,6 @@
                 </Setter>
             </Style>
 
-            <!--<Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignAlternateTabablzControlStyle}">
-                <Setter Property="ShowDefaultAddButton" Value="False" />
-                <Setter Property="ShowDefaultCloseButton" Value="False" />
-                <Setter Property="IsHitTestVisible" Value="True" />
-            </Style>-->
             
         </ResourceDictionary>
     </Application.Resources>

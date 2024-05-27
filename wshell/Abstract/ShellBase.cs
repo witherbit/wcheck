@@ -17,6 +17,8 @@ namespace wshell.Abstract
         public ShellState State { get; private set; }
         public ShellCallback Callback { get; internal set; }
 
+        public List<SettingsObject> Settings { get; }
+
         public Guid ContractId { get; internal set; }
 
         public event EventHandler<Guid> ShellRun;
@@ -24,8 +26,12 @@ namespace wshell.Abstract
         public event EventHandler<Guid> ShellPause;
         public event EventHandler<Guid> ShellResume;
 
-        public ShellBase(ShellInfo info)
+        public ShellBase(ShellInfo info, List<SettingsObject> settings = null)
         {
+            if(settings == null)
+                Settings = new List<SettingsObject>();
+            else
+                Settings = settings;
             ShellInfo = info;
             State = ShellState.Stopped;
         }

@@ -9,8 +9,8 @@ namespace wshell.Enums
     public enum ShellType
     {
         Background,
+        Task,
+        TaskView,
         View,
-        Embedded,
-        Service
     }
 }

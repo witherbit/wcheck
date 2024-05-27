@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
+using wcheck.Pages;
+using wcheck.wshell.Objects;
 using wshell.Abstract;
 
 namespace wcheck
@@ -30,29 +32,70 @@ namespace wcheck
             InitializeComponent();          
             SourceInitialized += OnSourceInitialized;
             Closed += OnClosedHandle;
-            _shellHost = new ShellHost(this);
-
-            //var item = new TabItem
-            //{
-            //    Header = "test item",
-            //    Background = Brushes.AliceBlue,
-                
-            //};
-            //item.Content = new Frame
-            //{
-            //    Background = Brushes.Gray,
-            //};
-            //uiTabController.Items.Add(item);
-
-            //var item2 = new TabItem
-            //{
-            //    Header = "test item 2",
-            //};
-            //item2.Content = new Frame
-            //{
-            //    Background = Brushes.White,
-            //};
-            //uiTabController.Items.Add(item2);
+            _shellHost = new ShellHost(this, new List<SettingsObject>
+            {
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterPath.p_PathToXds,
+                    Value = Consts.ParameterPath.v_PathToXds,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterPath.p_PathToTemp,
+                    Value = Consts.ParameterPath.v_PathToTemp,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterPath.p_PathToLog,
+                    Value = Consts.ParameterPath.v_PathToLog,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterPath.p_PathToShell,
+                    Value = Consts.ParameterPath.v_PathToShell,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterPath.p_PathToShellSha,
+                    Value = Consts.ParameterPath.v_PathToShellSha,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(string),
+                    Name = Consts.ParameterShell.p_AcceptedShell,
+                    Value = Consts.ParameterShell.v_AcceptedShell,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(bool),
+                    Name = Consts.ParameterShell.p_CheckShell,
+                    Value = Consts.ParameterShell.v_CheckShell,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(int),
+                    Name = Consts.ParameterConnection.p_Type,
+                    Value = Consts.ParameterConnection.v_Type,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(bool),
+                    Name = Consts.ParameterConnection.p_UseEnc,
+                    Value = Consts.ParameterConnection.v_UseEnc,
+                },
+                new SettingsObject
+                {
+                    Type = typeof(bool),
+                    Name = Consts.ParameterConnection.p_Port,
+                    Value = Consts.ParameterConnection.v_Port,
+                },
+            });
+            ShellHost.AddPage(new WelcomePage());
         }
 
         private void OnClosedHandle(object? sender, EventArgs e)
@@ -174,7 +217,10 @@ namespace wcheck
             var item = sender as MenuItem;
             //0 main
             if (item == uiMenuItem_0x4) this.Close();
-            else if (item == uiMenuItem_0x3) ;
+            else if (item == uiMenuItem_0x3)
+            {
+                ShellHost.AddPage(new SettingsPage());
+            }
             else if (item == uiMenuItem_0x2) ;
             else if (item == uiMenuItem_0x1) ;
             else if (item == uiMenuItem_0x0) ;
@@ -188,14 +234,34 @@ namespace wcheck
             else if (item == uiMenuItem_2x0) ToggleWindowState();
 
             //3 license
+            //license abouts
             else if (item == uiMenuItem_3x1) ;
-            else if (item == uiMenuItem_3x0) ;
+            //update license data
+            else if (item == uiMenuItem_3x0)
+            {
+                ShellHost.AddPage(new LicenseUpdatePage());
+            } 
 
             //4 help
-            else if (item == uiMenuItem_4x3) ;
+            else if (item == uiMenuItem_4x3)
+            {
+                ShellHost.AddPage(new AboutsPage());
+            }
             else if (item == uiMenuItem_4x2) ;
             else if (item == uiMenuItem_4x1) ;
             else if (item == uiMenuItem_4x0) ;
+        }
+
+        private void uiTabController_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach(var item in uiTabController.Items)
+            {
+                var tab = item as TabItem;
+                if (tab == uiTabController.SelectedItem)
+                    ShellHost.ChangeColor(true, tab);
+                else
+                    ShellHost.ChangeColor(false, tab);
+            }
         }
     }
 }

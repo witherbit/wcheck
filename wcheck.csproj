@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\icon512.png" />
     <None Remove="icon.png" />
   </ItemGroup>
 
@@ -18,16 +19,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\icon512.png" />
     <Resource Include="icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wcontrols\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dragablz" Version="0.0.3.234" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="pwither.formatter" Version="1.0.1" />
     <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Windows\" />
   </ItemGroup>
 </Project>
