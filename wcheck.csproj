@@ -26,6 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Dragablz" Version="0.0.3.234" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="pwither.formatter" Version="1.0.1" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
@@ -34,6 +35,5 @@
     <Folder Include="Windows\" />
     <Folder Include="wshell\Repos\" />
     <Folder Include="wshell\Ui\" />
-    <Folder Include="wshell\Net\" />
   </ItemGroup>
 </Project>
