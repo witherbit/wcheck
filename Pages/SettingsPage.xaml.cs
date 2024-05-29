@@ -32,17 +32,17 @@ namespace wcheck.Pages
         public SettingsPage()
         {
             InitializeComponent();
-            uiPropPathXSD.WText = Settings.GetValue<string>(Consts.ParameterPath.p_PathToXds);
-            uiPropPathTemp.WText = Settings.GetValue<string>(Consts.ParameterPath.p_PathToTemp);
-            uiPropPathLog.WText = Settings.GetValue<string>(Consts.ParameterPath.p_PathToLog);
-            uiPropPathShell.WText = Settings.GetValue<string>(Consts.ParameterPath.p_PathToShell);
-            uiPropPathShellSha.WText = Settings.GetValue<string>(Consts.ParameterPath.p_PathToShellSha);
-            uiPropShellAccepted.WText = Settings.GetValue<string>(Consts.ParameterShell.p_AcceptedShell);
-            uiPropShellSha.WChecked = Settings.GetValue<bool>(Consts.ParameterShell.p_CheckShell);
-            uiPropConType.WSelectedIndex = Settings.GetValue<int>(Consts.ParameterConnection.p_Type);
-            uiPropConEncKey.WText = Settings.GetValue<string>(Consts.ParameterConnection.p_EncPath);
-            uiPropConUseEnc.WChecked = Settings.GetValue<bool>(Consts.ParameterConnection.p_UseEnc);
-            uiPropConPort.WText = Settings.GetValue<int>(Consts.ParameterConnection.p_Port).ToString();
+            uiPropPathXSD.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToXds);
+            uiPropPathTemp.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToTemp);
+            uiPropPathLog.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToLog);
+            uiPropPathShell.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell);
+            uiPropPathShellSha.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShellSha);
+            uiPropShellAccepted.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterShell.p_AcceptedShell);
+            uiPropShellSha.WChecked = Settings.GetValue<bool>(SettingsParamConsts.ParameterShell.p_CheckShell);
+            uiPropConType.WSelectedIndex = Settings.GetValue<int>(SettingsParamConsts.ParameterConnection.p_Type);
+            uiPropConEncKey.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterConnection.p_EncPath);
+            uiPropConUseEnc.WChecked = Settings.GetValue<bool>(SettingsParamConsts.ParameterConnection.p_UseEnc);
+            uiPropConPort.WText = Settings.GetValue<int>(SettingsParamConsts.ParameterConnection.p_Port).ToString();
 
             Shells = ShellHost.Instance.Controller.Shells;
 
@@ -67,7 +67,7 @@ namespace wcheck.Pages
                         MessageBox.Show("Невозможно сохранить настройки:\r\nНеправильно введен параметр \'Порт сервиса\' - порт должен находиться в диапазоне 0-65535", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-                    Settings.Get(Consts.ParameterConnection.p_Port).Value = port;
+                    Settings.Get(SettingsParamConsts.ParameterConnection.p_Port).Value = port;
                 }
                 catch
                 {
@@ -77,10 +77,10 @@ namespace wcheck.Pages
 
                 try
                 {
-                    FileCheckExist(Consts.ParameterPath.p_PathToXds, uiPropPathXSD);
-                    FileCheckExist(Consts.ParameterPath.p_PathToTemp, uiPropPathTemp);
-                    FileCheckExist(Consts.ParameterPath.p_PathToLog, uiPropPathLog);
-                    FileCheckExist(Consts.ParameterPath.p_PathToShell, uiPropPathShell);
+                    FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToXds, uiPropPathXSD);
+                    FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToTemp, uiPropPathTemp);
+                    FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToLog, uiPropPathLog);
+                    FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToShell, uiPropPathShell);
                 }
                 catch (Exception ex) 
                 {
@@ -89,12 +89,12 @@ namespace wcheck.Pages
                 }
                 
 
-                Settings.Get(Consts.ParameterPath.p_PathToShellSha).Value = uiPropPathShellSha.WText;
-                Settings.Get(Consts.ParameterShell.p_AcceptedShell).Value = uiPropShellAccepted.WText;
-                Settings.Get(Consts.ParameterShell.p_CheckShell).Value = uiPropShellSha.WChecked;
-                Settings.Get(Consts.ParameterConnection.p_Type).Value = uiPropConType.WSelectedIndex;
-                Settings.Get(Consts.ParameterConnection.p_EncPath).Value = uiPropConEncKey.WText;
-                Settings.Get(Consts.ParameterConnection.p_UseEnc).Value = uiPropConUseEnc.WChecked;
+                Settings.Get(SettingsParamConsts.ParameterPath.p_PathToShellSha).Value = uiPropPathShellSha.WText;
+                Settings.Get(SettingsParamConsts.ParameterShell.p_AcceptedShell).Value = uiPropShellAccepted.WText;
+                Settings.Get(SettingsParamConsts.ParameterShell.p_CheckShell).Value = uiPropShellSha.WChecked;
+                Settings.Get(SettingsParamConsts.ParameterConnection.p_Type).Value = uiPropConType.WSelectedIndex;
+                Settings.Get(SettingsParamConsts.ParameterConnection.p_EncPath).Value = uiPropConEncKey.WText;
+                Settings.Get(SettingsParamConsts.ParameterConnection.p_UseEnc).Value = uiPropConUseEnc.WChecked;
 
                 Settings.Save();
                 ShellHost.ClosePage(this);

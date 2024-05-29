@@ -15,8 +15,10 @@ using wshell.Net.Nodes;
 
 namespace wshell.Net
 {
-    public class ShellSocket
+    public class ShellSocket : IDisposable
     {
+        private bool disposedValue;
+
         public delegate Node NodeRequestHandler(ShellSocket socket, Node schema);
         public event NodeRequestHandler NodeRequest;
         private TcpListener _listenerSocket { get; set; }
@@ -44,7 +46,6 @@ namespace wshell.Net
                         var client = _listenerSocket.AcceptTcpClient();
                         Task.Run(async () => await HandleResponse(client));
                     }
-
                     Close();
                 }
                 catch (Exception ex)
@@ -168,6 +169,30 @@ namespace wshell.Net
                     { "code", "500" }
                 });
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Close();
+                    NodeRequest = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        ~ShellSocket()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -55,8 +55,18 @@ namespace wcheck.wshell.Enums
         GetShellInstanceRequest,
         /// <summary>
         /// Ответ на запрос на получение объекта модуля
-        /// [InvokeRequest] (ShellBase)
+        /// [returned from InvokeRequest] (ShellBase)
         /// </summary>    
         GetShellInstanceResponse,
+        /// <summary>
+        /// Запрос на получение значения параметра
+        /// [InvokeRequest] (string ParameterName)
+        /// </summary>    
+        SettingsParameterRequest,
+        /// <summary>
+        /// Ответ на запрос на получение значения параметра
+        /// [returned from InvokeRequest] (SettingObject)
+        /// </summary>    
+        SettingsParameterResponse,
     }
 }

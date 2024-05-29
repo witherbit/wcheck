@@ -36,58 +36,58 @@ namespace wcheck
             {
                 new SettingsObject
                 {
-                    Name = Consts.ParameterPath.p_PathToXds,
-                    Value = Consts.ParameterPath.v_PathToXds,
+                    Name = SettingsParamConsts.ParameterPath.p_PathToXds,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToXds,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterPath.p_PathToTemp,
-                    Value = Consts.ParameterPath.v_PathToTemp,
+                    Name = SettingsParamConsts.ParameterPath.p_PathToTemp,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToTemp,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterPath.p_PathToLog,
-                    Value = Consts.ParameterPath.v_PathToLog,
+                    Name = SettingsParamConsts.ParameterPath.p_PathToLog,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToLog,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterPath.p_PathToShell,
-                    Value = Consts.ParameterPath.v_PathToShell,
+                    Name = SettingsParamConsts.ParameterPath.p_PathToShell,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToShell,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterPath.p_PathToShellSha,
-                    Value = Consts.ParameterPath.v_PathToShellSha,
+                    Name = SettingsParamConsts.ParameterPath.p_PathToShellSha,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToShellSha,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterShell.p_AcceptedShell,
-                    Value = Consts.ParameterShell.v_AcceptedShell,
+                    Name = SettingsParamConsts.ParameterShell.p_AcceptedShell,
+                    Value = SettingsParamConsts.ParameterShell.v_AcceptedShell,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterShell.p_CheckShell,
-                    Value = Consts.ParameterShell.v_CheckShell,
+                    Name = SettingsParamConsts.ParameterShell.p_CheckShell,
+                    Value = SettingsParamConsts.ParameterShell.v_CheckShell,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterConnection.p_Type,
-                    Value = Consts.ParameterConnection.v_Type,
+                    Name = SettingsParamConsts.ParameterConnection.p_Type,
+                    Value = SettingsParamConsts.ParameterConnection.v_Type,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterConnection.p_EncPath,
+                    Name = SettingsParamConsts.ParameterConnection.p_EncPath,
                     Value = string.Empty,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterConnection.p_UseEnc,
-                    Value = Consts.ParameterConnection.v_UseEnc,
+                    Name = SettingsParamConsts.ParameterConnection.p_UseEnc,
+                    Value = SettingsParamConsts.ParameterConnection.v_UseEnc,
                 },
                 new SettingsObject
                 {
-                    Name = Consts.ParameterConnection.p_Port,
-                    Value = Consts.ParameterConnection.v_Port,
+                    Name = SettingsParamConsts.ParameterConnection.p_Port,
+                    Value = SettingsParamConsts.ParameterConnection.v_Port,
                 },
             });
             ShellHost.AddPage(new WelcomePage());

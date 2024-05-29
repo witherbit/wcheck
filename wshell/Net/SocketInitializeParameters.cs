@@ -10,6 +10,9 @@ namespace wshell.Net
     public sealed class SocketInitializeParameters
     {
         public int Port { get; set; }
-        SocketAuthType AuthType { get; set; }
+        public SocketAuthType AuthType { get; set; }
+
+        public NetworkingConnectionType ConnectionType { get; set; }
+        public bool UseEncryption { get; set; }
     }
 }

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "wScapTest", "..\wScapTest\w
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tview.scapproc.shellv1", "..\tview.scapproc.shellv1\tview.scapproc.shellv1.csproj", "{3B8F9EB9-8BEA-4723-90D4-3B012EDFA242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infosystems.task.shellv1", "..\infosystems.task.shellv1\infosystems.task.shellv1.csproj", "{BEB3EBD8-9EAA-4441-A8A2-5AA5C8605576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infosystems.task.shellv1", "..\infosystems.task.shellv1\infosystems.task.shellv1.csproj", "{BEB3EBD8-9EAA-4441-A8A2-5AA5C8605576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

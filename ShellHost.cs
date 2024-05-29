@@ -45,7 +45,7 @@ namespace wcheck
             Callback = new ShellCallback();
 
             Controller = new ShellController();
-            Controller.LoadAll(Settings.GetValue<string>(Consts.ParameterPath.p_PathToShell), Settings.GetValue<string>(Consts.ParameterShell.p_AcceptedShell));
+            Controller.LoadAll(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell), Settings.GetValue<string>(SettingsParamConsts.ParameterShell.p_AcceptedShell));
             if (Controller.Shells.Length > 0)
                 Controller.RegisterAll(this);
 
@@ -73,6 +73,9 @@ namespace wcheck
 
                 case CallbackType.GetShellInstanceRequest:
                     return new Schema(CallbackType.GetShellInstanceResponse).SetProviding(Controller.GetShellById(schema.GetProviding<ShellInfo>().Id));
+
+                case CallbackType.SettingsParameterRequest:
+                    return new Schema(CallbackType.SettingsParameterResponse).SetProviding(Settings.Get(schema.GetProviding<string>()));
 
                 default:
                     return new Schema(CallbackType.EmptyResponse);
@@ -177,10 +180,10 @@ namespace wcheck
 
         private void CreateDir()
         {
-            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToXds));
-            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToTemp));
-            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToLog));
-            Directory.CreateDirectory(Settings.GetValue<string>(Consts.ParameterPath.p_PathToShell));
+            Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToXds));
+            Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToTemp));
+            Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToLog));
+            Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell));
         }
 
         private void UpdateShellMenu()
