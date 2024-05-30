@@ -242,6 +242,7 @@
                                   Name="uiMenuItem_1x1"
                                   IsEnabled="True"
                                   Click="MenuItem_Click"
+                                  Visibility="Collapsed"
                                   />
                     </MenuItem>
                     <MenuItem Header="Вид" Name="uiMenuItem_2">
