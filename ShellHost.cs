@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using wcheck.Pages;
+using wcheck.Utils;
 using wcheck.wcontrols;
 using wcheck.wshell.Enums;
 using wcheck.wshell.Objects;
@@ -41,13 +42,22 @@ namespace wcheck
             Settings = ShellSettings.Load("23aca232-542a-4716-b51a-fe050de5fcb9", defaultSettings);
             CreateDir();
             Instance = this;
+
+            Logger.Log(new LogContent(WelcomePage.SysInfoGet(), this));
+            Logger.Clear();
+            Logger.Log(new LogContent("Cleared older log files", this));
+
             HostWindow = mainWindow;
             Callback = new ShellCallback();
 
             Controller = new ShellController();
+
+            Logger.Log(new LogContent("Loading shells", this));
             Controller.LoadAll(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell), Settings.GetValue<string>(SettingsParamConsts.ParameterShell.p_AcceptedShell));
             if (Controller.Shells.Length > 0)
                 Controller.RegisterAll(this);
+
+            Logger.Log(new LogContent($"{Controller.Shells.Length} shells registered ,{Controller.DeniedIds.Length} shells ignored", this));
 
             Callback.Callback += OnCallback;
             Callback.RequestCallback += OnRequestCallback;
@@ -59,6 +69,7 @@ namespace wcheck
 
         private Schema OnRequestCallback(ShellBase shell, Schema schema)
         {
+            Logger.Log(new LogContent($"Callback request from {shell.ShellInfo.Id} [{shell.ShellInfo.Name}]\r\nType: {schema.Type}", this));
             switch (schema.Type)
             {
                 case CallbackType.ReloadPageRequest:
@@ -84,6 +95,7 @@ namespace wcheck
 
         private void OnCallback(ShellBase shell, Schema schema)
         {
+            Logger.Log(new LogContent($"Callback invoke from {shell.ShellInfo.Id} [{shell.ShellInfo.Name}]\r\nType: {schema.Type}", this));
             switch (schema.Type)
             {
                 case CallbackType.RegisterPage:
@@ -149,6 +161,7 @@ namespace wcheck
             };
             Instance.Tab.Items.Add(tab);
             Items.Add(tab);
+            Logger.Log(new LogContent($"Registered the new page", page));
         }
 
         public static void ClosePage(Page page, Action? action = null)
@@ -159,6 +172,7 @@ namespace wcheck
                 action?.Invoke();
                 Instance.Tab.Items.Remove(item);
                 Items.Remove(item);
+                Logger.Log(new LogContent($"Unregister the page", page));
             }
         }
 

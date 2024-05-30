@@ -15,7 +15,7 @@
             <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1" Background="#1f1f1f" Margin="0 15"/>
+        <Grid Grid.Column="1" Background="#1f1f1f" Margin="0 40"/>
 
         <Button Grid.Column="2" Height="30" Width="30" Margin="5" Click="uiCloseTab_Click" Foreground="#fca577" Background="#1f1f1f" ToolTip="Закрыть вкладку" x:Name="uiCloseTab" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignCloseItemCommandButtonStyle}">
 

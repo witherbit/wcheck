@@ -32,6 +32,7 @@ namespace wcheck
             InitializeComponent();          
             SourceInitialized += OnSourceInitialized;
             Closed += OnClosedHandle;
+            var mainPage = new WelcomePage();
             _shellHost = new ShellHost(this, new List<SettingsObject>
             {
                 new SettingsObject
@@ -90,7 +91,7 @@ namespace wcheck
                     Value = SettingsParamConsts.ParameterConnection.v_Port,
                 },
             });
-            ShellHost.AddPage(new WelcomePage());
+            ShellHost.AddPage(mainPage);
         }
 
         private void OnClosedHandle(object? sender, EventArgs e)

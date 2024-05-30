@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using wcheck.Utils;
 using wshell.Abstract;
 using wshell.Objects;
 
@@ -26,7 +27,10 @@ namespace wshell.Core
         public void LoadAll(string directory, string allowedIds)
         {
             foreach (var file in Directory.EnumerateFiles(directory, "*.dll", SearchOption.AllDirectories))
+            {
+                Logger.Log(new LogContent($"Try loading {System.IO.Path.GetFileName(file)}", this));
                 LoadByPath(file, allowedIds);
+            }
         }
 
         public void LoadByPath(string path, string allowedIds)
@@ -43,10 +47,12 @@ namespace wshell.Core
                         {
                             if (allowedIds.Contains(shell.ShellInfo.Id.ToString()))
                             {
+                                Logger.Log(new LogContent($"Shell {shell.ShellInfo.Id.ToString()} allowed", this));
                                 _shells.Add(shell);
                             }
                             else
                             {
+                                Logger.Log(new LogContent($"Shell {shell.ShellInfo.Id.ToString()} forbidden", this, LogType.WARN));
                                 _deniedIds.Add(shell.ShellInfo);
                             }
                         }
