@@ -10,9 +10,9 @@ namespace wcheck.wshell.Objects
 {
     public sealed class Schema
     {
-        public CallbackType Type { get; set; }
-        private object _providing { get; set; }
-        private Dictionary<string, string> _attributes { get; set; }
+        public CallbackType Type { get; set; } //тип схемы
+        private object _providing { get; set; } //объект предоставления
+        private Dictionary<string, string> _attributes { get; set; } //атрибуты схемы
 
         public Schema(CallbackType type) 
         {
@@ -20,17 +20,22 @@ namespace wcheck.wshell.Objects
             _attributes = new Dictionary<string, string>();
         }
 
-        public Schema SetProviding<T>(T providing)
+        public Schema SetProviding<T>(T providing) //устанавливает объект предоставления
         {
             this._providing = providing;
             return this;
         }
-        public T GetProviding<T>()
+        public T GetProviding<T>() //получает объект предоставления
         {
             return (T)_providing;
         }
 
-        public Schema SetAttribute(string attribute, string value)
+        public Type GetProvidingType() //получает тип объекта предоставления
+        {
+            return _providing.GetType();
+        }
+
+        public Schema SetAttribute(string attribute, string value) //устанавливает значение атрибута
         {
             if (!_attributes.ContainsKey(attribute))
             {
@@ -39,7 +44,7 @@ namespace wcheck.wshell.Objects
             return this;
         }
 
-        public string? GetAttribute(string attribute)
+        public string? GetAttribute(string attribute) //получает значение атрибута
         {
             if (_attributes.ContainsKey(attribute))
             {

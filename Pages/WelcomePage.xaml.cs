@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.VisualBasic.Logging;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,10 @@ namespace wcheck.Pages
             var brush = "#1f1f1f".GetBrush();
             if (e.Type == LogType.WARN) brush = "#ff9900".GetBrush();
             else if (e.Type == LogType.CRITICAL) brush = "#ff3900".GetBrush();
+
+            if(uiStackPanelLogs.Children.Count > 500)
+                uiStackPanelLogs.Children.RemoveAt(0);
+
             uiStackPanelLogs.Children.Add(new TextBox
             {
                 FontFamily = new FontFamily("Arial"),

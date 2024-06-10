@@ -141,7 +141,6 @@ namespace wcheck.wcontrols
         public bool? Checked { get; set; }
         public object ComboBoxItem { get; set; }
         public int SelectedIndex { get; set; }
-
     }
 
     public enum PropertyType

@@ -19,20 +19,20 @@ namespace wshell.Net
     {
         private bool disposedValue;
 
-        public delegate Node NodeRequestHandler(ShellSocket socket, Node schema);
-        public event NodeRequestHandler NodeRequest;
-        private TcpListener _listenerSocket { get; set; }
+        public delegate Node NodeRequestHandler(ShellSocket socket, Node schema); //делегат для обработки запросов
+        public event NodeRequestHandler NodeRequest; //событие обработки запроса
+        private TcpListener _listenerSocket { get; set; } //объект слушателя Tcp
         private CancellationTokenSource _cancellationTokenSource { get; set; }
-        public CancellationToken CancellationToken { get; private set; }
+        public CancellationToken CancellationToken { get; private set; } //токен отмены
 
-        public SocketInitializeParameters InitializeParameters { get; private set; }
+        public SocketInitializeParameters InitializeParameters { get; private set; } //параметры инициализации
 
         public ShellSocket(SocketInitializeParameters initializeParameters)
         {
             InitializeParameters = initializeParameters;
         }
 
-        private void Listen()
+        private void Listen() //обработка прослушиваний входящих соединений
         {
             if (_cancellationTokenSource != null)
             {
@@ -44,7 +44,7 @@ namespace wshell.Net
                     while (!CancellationToken.IsCancellationRequested)
                     {
                         var client = _listenerSocket.AcceptTcpClient();
-                        Task.Run(async () => await HandleResponse(client));
+                        Task.Run(async () => await HandleResponse(client)); //обрабатывает запрос в отдельном потоке
                     }
                     Close();
                 }
@@ -66,14 +66,14 @@ namespace wshell.Net
             return response.ToArray();
         }
 
-        public Node Receive(TcpClient client, CancellationToken token)
+        public Node Receive(TcpClient client, CancellationToken token) //получает Node
         {
             while (!token.IsCancellationRequested)
             {
                 try
                 {
                     var update = ReadStream(client, token);
-                    return Node.Unpack(update);
+                    return Node.Unpack(update, InitializeParameters);
                 }
                 catch (Exception ex)
                 {
@@ -89,7 +89,7 @@ namespace wshell.Net
                 });
         }
 
-        private async Task HandleResponse(TcpClient client)
+        private async Task HandleResponse(TcpClient client) //обработка ответа на запрос
         {
             try
             {
@@ -98,7 +98,7 @@ namespace wshell.Net
                 if (!CancellationToken.IsCancellationRequested)
                     if (node != null && node.Tag != "exception" && node.Tag != "empty")
                     {
-                        var data = NodeRequest?.Invoke(this, node).Pack();
+                        var data = NodeRequest?.Invoke(this, node).Pack(InitializeParameters);
                         await stream.WriteAsync(data, 0, data.Length);
                     }
                     else
@@ -106,7 +106,7 @@ namespace wshell.Net
                         var data = new Node("bad request", new Dictionary<string, string>
                         {
                             { "code", "400" }
-                        }).Pack();
+                        }).Pack(InitializeParameters);
                         await stream.WriteAsync(data, 0, data.Length);
                     }
             }
@@ -116,7 +116,7 @@ namespace wshell.Net
             client.Close();
         }
 
-        public void Open()
+        public void Open() //запуск прослушивания Tcp соединений
         {
             if (_cancellationTokenSource == null)
             {
@@ -126,7 +126,7 @@ namespace wshell.Net
                 receiveThread.Start();
             }
         }
-        public void Close()
+        public void Close() //остановка прослушивания Tcp соединений
         {
             if (_cancellationTokenSource != null)
             {
@@ -137,7 +137,7 @@ namespace wshell.Net
             }
         }
 
-        public async Task<Node> RequestAsync(IPAddress address, Node node, CancellationToken cancellationToken)
+        public async Task<Node> RequestAsync(IPAddress address, Node node, CancellationToken cancellationToken) //запрос
         {
             var client = new TcpClient();
             try
@@ -147,7 +147,7 @@ namespace wshell.Net
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
-                    var data = node.Pack();
+                    var data = node.Pack(InitializeParameters);
                     await stream.WriteAsync(data, 0, data.Length);
                 }
                 else

@@ -14,5 +14,7 @@ namespace wshell.Net
 
         public NetworkingConnectionType ConnectionType { get; set; }
         public bool UseEncryption { get; set; }
+
+        public byte[] Key { get; set; }
     }
 }

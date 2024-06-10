@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using wcheck.Pages;
 using wcheck.Utils;
 using wshell.Abstract;
 using wshell.Objects;
@@ -13,9 +14,9 @@ namespace wshell.Core
 {
     internal class ShellController
     {
-        private List<ShellBase> _shells = new List<ShellBase>();
-        private List<ShellInfo> _deniedIds = new List<ShellInfo>();
-        public ContractStore ContractStore { get; }
+        private List<ShellBase> _shells = new List<ShellBase>(); //список для хранения модулей
+        private List<ShellInfo> _deniedIds = new List<ShellInfo>(); //список для хранения отклоненных модулей
+        public ContractStore ContractStore { get; } //хранилище контрактов
         public ShellBase[] Shells { get => _shells.Count < 1 ? Array.Empty<ShellBase>() : _shells.ToArray(); }
         public ShellInfo[] DeniedIds { get => _deniedIds.Count < 1 ? Array.Empty<ShellInfo>() : _deniedIds.ToArray(); }
 
@@ -24,22 +25,24 @@ namespace wshell.Core
             ContractStore = new ContractStore();
         }
 
-        public void LoadAll(string directory, string allowedIds)
+        public void LoadAll(string directory, string allowedIds) //загружает разрешенные модули из директории
         {
-            foreach (var file in Directory.EnumerateFiles(directory, "*.dll", SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(directory, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 Logger.Log(new LogContent($"Try loading {System.IO.Path.GetFileName(file)}", this));
                 LoadByPath(file, allowedIds);
             }
         }
 
-        public void LoadByPath(string path, string allowedIds)
+        public void LoadByPath(string path, string allowedIds) //загружает один разрешенный модуль
         {
             try
             {
                 var shellAssembly = Assembly.LoadFile(path);
+                Logger.Log(new LogContent($"Get assembly: {shellAssembly.GetTypes().Length}", this));
                 foreach (var type in shellAssembly.GetTypes())
                 {
+                    Logger.Log(new LogContent($"Get type: {type.Name}", this));
                     if (type.BaseType == typeof(ShellBase))
                     {
                         var shell = shellAssembly.CreateInstance(type.FullName) as ShellBase;
@@ -63,7 +66,7 @@ namespace wshell.Core
             catch { }
         }
 
-        public void RegisterAll(IHost host)
+        public void RegisterAll(IHost host) //регистрирует контракты всех модулей
         {
             for (int i = 0; i < _shells.Count; i++)
                 RegisterShellByIndex(i, host);
@@ -74,18 +77,23 @@ namespace wshell.Core
             return _shells.FirstOrDefault(x => x.ShellInfo.Id == shellId);
         }
 
+        public ShellBase GetShellById(string shellId) //возвращает модуль по его идентификатору
+        {
+            return _shells.FirstOrDefault(x => x.ShellInfo.Id.ToString() == shellId);
+        }
+
         public ShellBase GetShellByIndex(int index)
         {
             return _shells[index];
         }
 
-        public ShellBase RegisterShellById(Guid shellId, IHost host)
+        public ShellBase RegisterShellById(Guid shellId, IHost host) //регистрирует контракт по идентификатору модуля
         {
             var shell = _shells.FirstOrDefault(x => x.ShellInfo.Id == shellId);
             RegisterShell(shell, host);
             return shell;
         }
-        public void RegisterShell(ShellBase shell, IHost host)
+        public void RegisterShell(ShellBase shell, IHost host) //регистрирует контракт
         {
             ContractStore.Register(shell, host);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
+using wcheck.Documents;
 using wcheck.Pages;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
@@ -54,6 +56,11 @@ namespace wcheck
                 {
                     Name = SettingsParamConsts.ParameterPath.p_PathToShell,
                     Value = SettingsParamConsts.ParameterPath.v_PathToShell,
+                },
+                new SettingsObject
+                {
+                    Name = SettingsParamConsts.ParameterPath.p_PathToDeps,
+                    Value = SettingsParamConsts.ParameterPath.v_PathToDeps,
                 },
                 new SettingsObject
                 {
@@ -244,7 +251,10 @@ namespace wcheck
                 ShellHost.AddPage(new AboutsPage());
             }
             else if (item == uiMenuItem_4x2) ;
-            else if (item == uiMenuItem_4x1) ;
+            else if (item == uiMenuItem_4x1)
+            {
+                ShellHost.AddPage(new MarkdownPage("Документация разработчика", "wcheck.Documents.WShell.md".GetEmbeddedResource()));
+            }
             else if (item == uiMenuItem_4x0) ;
         }
 

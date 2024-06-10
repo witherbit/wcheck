@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Navigation;
+using System.Xml.Linq;
 using wcheck.Pages;
 using wcheck.Utils;
 using wcheck.wcontrols;
@@ -20,6 +22,7 @@ using wshell.Abstract;
 using wshell.Core;
 using wshell.Enums;
 using wshell.Objects;
+using wshell.Utils;
 
 namespace wcheck
 {
@@ -43,6 +46,7 @@ namespace wcheck
             CreateDir();
             Instance = this;
 
+
             Logger.Log(new LogContent(WelcomePage.SysInfoGet(), this));
             Logger.Clear();
             Logger.Log(new LogContent("Cleared older log files", this));
@@ -51,6 +55,7 @@ namespace wcheck
             Callback = new ShellCallback();
 
             Controller = new ShellController();
+
 
             Logger.Log(new LogContent("Loading shells", this));
             Controller.LoadAll(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell), Settings.GetValue<string>(SettingsParamConsts.ParameterShell.p_AcceptedShell));
@@ -62,10 +67,28 @@ namespace wcheck
             Callback.Callback += OnCallback;
             Callback.RequestCallback += OnRequestCallback;
 
+            //AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+
             UpdateShellMenu();
 
             Items = new List<TabItem>();
+
         }
+
+        //private Assembly? ResolveAssembly(object? sender, ResolveEventArgs args)
+        //{
+        //    var name = args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll";
+        //    foreach (var i in Directory.EnumerateFiles(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToDeps), "*.dll", SearchOption.AllDirectories))
+        //    {
+        //        if (i.Contains(name))
+        //        {
+        //            var raw = File.ReadAllBytes(i);
+        //            var assembly = Assembly.Load(raw);
+        //            return assembly;
+        //        }
+        //    }
+        //    return null;
+        //}
 
         private Schema OnRequestCallback(ShellBase shell, Schema schema)
         {
@@ -85,8 +108,20 @@ namespace wcheck
                 case CallbackType.GetShellInstanceRequest:
                     return new Schema(CallbackType.GetShellInstanceResponse).SetProviding(Controller.GetShellById(schema.GetProviding<ShellInfo>().Id));
 
+                case CallbackType.CustomRequest:
+                    return this.InvokeCustomResponse(schema.GetAttribute("target"), schema);
+
                 case CallbackType.SettingsParameterRequest:
-                    return new Schema(CallbackType.SettingsParameterResponse).SetProviding(Settings.Get(schema.GetProviding<string>()));
+                    var targetAttribute = schema.GetAttribute("target");
+                    if (targetAttribute == null)
+                        return new Schema(CallbackType.SettingsParameterResponse).SetProviding(Settings.Get(schema.GetProviding<string>()));
+                    else
+                    {
+                        var shellProperty = Controller.GetShellById(targetAttribute);
+                        if(shellProperty != null)
+                            return new Schema(CallbackType.SettingsParameterResponse).SetProviding(shellProperty.Settings.Get(schema.GetProviding<string>())).SetAttribute("from", targetAttribute);
+                        return new Schema(CallbackType.SettingsParameterResponse).SetAttribute("from", targetAttribute);
+                    }
 
                 default:
                     return new Schema(CallbackType.EmptyResponse);
@@ -103,6 +138,24 @@ namespace wcheck
                     break;
                 case CallbackType.UnregisterPage:
                     ClosePage(schema.GetProviding<Page>());
+                    break;
+                case CallbackType.ShellPropertyChanged:
+                    this.InvokeSettingsPropertyChanged(schema.GetProviding<string>());
+                    break;
+                case CallbackType.StartTaskView:
+                    this.InvokeStartTaskView(schema.GetProviding<string>());
+                    break;
+                case CallbackType.CustomInvoke:
+                    this.InvokeCustom(schema.GetAttribute("target"), schema);
+                    break;
+                case CallbackType.SetTabFocus:
+                    var requestFocusPage = schema.GetProviding<Page>();
+                    var item = Items.FirstOrDefault(x => ((x.Header as Border).Child as TextBlock).Text == requestFocusPage.Title);
+                    if(item != null)
+                    {
+                        Tab.SelectedIndex = Tab.Items.IndexOf(item);
+                        item.Focus();
+                    }
                     break;
             }
         }
@@ -198,6 +251,7 @@ namespace wcheck
             Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToTemp));
             Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToLog));
             Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell));
+            Directory.CreateDirectory(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToDeps));
         }
 
         private void UpdateShellMenu()
@@ -206,20 +260,8 @@ namespace wcheck
             var tasks = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.Task).ToList();
             var taskViews = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.TaskView).ToList();
             var views = Controller.Shells.Where(x => x.ShellInfo.Type == ShellType.View).ToList();
-            if(backgrounds.Count > 0)
-            {
-                HostWindow.uiMenuItem_1.Items.Add(new Separator());
-                foreach(var item in backgrounds)
-                {
-                    HostWindow.uiMenuItem_1.Items.Add(new MenuItem
-                    {
-                        Header = item.ShellInfo.Name + " (Фоновый)",
-                    });
-                }
-            }
             if (tasks.Count > 0)
             {
-                HostWindow.uiMenuItem_1.Items.Add(new Separator());
                 foreach (var item in tasks)
                 {
                     var menuItem = new MenuItem
@@ -229,26 +271,41 @@ namespace wcheck
                     menuItem.Click += (s, e) => { item.Run(); };
                     HostWindow.uiMenuItem_1.Items.Add(menuItem);
                 }
+                if(taskViews.Count > 0 || views.Count > 0 || backgrounds.Count > 0)
+                    HostWindow.uiMenuItem_1.Items.Add(new Separator());
             }
             if (taskViews.Count > 0)
             {
-                HostWindow.uiMenuItem_1.Items.Add(new Separator());
                 foreach (var item in taskViews)
                 {
                     HostWindow.uiMenuItem_1.Items.Add(new MenuItem
                     {
+                        IsEnabled = false,
                         Header = item.ShellInfo.Name + " (Компонент задачи)",
                     });
                 }
+                if (views.Count > 0 || backgrounds.Count > 0)
+                    HostWindow.uiMenuItem_1.Items.Add(new Separator());
             }
             if (views.Count > 0)
             {
-                HostWindow.uiMenuItem_1.Items.Add(new Separator());
                 foreach (var item in views)
                 {
                     HostWindow.uiMenuItem_1.Items.Add(new MenuItem
                     {
                         Header = item.ShellInfo.Name + " (Компонент)",
+                    });
+                }
+                if (backgrounds.Count > 0)
+                    HostWindow.uiMenuItem_1.Items.Add(new Separator());
+            }
+            if (backgrounds.Count > 0)
+            {
+                foreach (var item in backgrounds)
+                {
+                    HostWindow.uiMenuItem_1.Items.Add(new MenuItem
+                    {
+                        Header = item.ShellInfo.Name + " (Фоновый)",
                     });
                 }
             }

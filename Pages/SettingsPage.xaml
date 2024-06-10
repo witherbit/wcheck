@@ -32,6 +32,7 @@
                         <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\tmp" Text="Путь к директории временных файлов" WWrap="NoWrap" x:Name="uiPropPathTemp"/>
                         <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\log" Text="Путь к директории логов" WWrap="NoWrap" x:Name="uiPropPathLog"/>
                         <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\shell" Text="Путь к директории модулей" WWrap="NoWrap" x:Name="uiPropPathShell"/>
+                        <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: C:\ProgramData\Witherbit\wcheck\shell\dependencies" Text="Путь к директории зависимостей" WWrap="NoWrap" x:Name="uiPropPathShellDeps"/>
                         <control:WProperty Margin="5 0 5 5" WPropertyType="TextBox" WPlaceholder="Default: https://raw.githubusercontent.com/witherbit/wcheck/master/wshell/Repos/sha.rep" Text="URI репозитория целостности модулей" WWrap="NoWrap" x:Name="uiPropPathShellSha"/>
                     </StackPanel>
                 </Expander>

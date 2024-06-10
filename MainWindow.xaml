@@ -271,7 +271,7 @@
                                   Name="uiMenuItem_4x0"
                                   Click="MenuItem_Click"
                                   />
-                        <MenuItem Header="Документация" 
+                        <MenuItem Header="Документация разработчика" 
                                   Name="uiMenuItem_4x1"
                                   Click="MenuItem_Click"
                                   />

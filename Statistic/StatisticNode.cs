@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using pwither.formatter;
 
-namespace wcheck.Objects
+namespace wcheck.Statistic
 {
-    public sealed class ReportNode
+    [BitSerializable]
+    public class StatisticNode
     {
     }
 }

@@ -11,11 +11,16 @@
 
   <ItemGroup>
     <None Remove="Assets\icon512.png" />
+    <None Remove="Documents\WShell.md" />
     <None Remove="icon.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\favicon512.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Documents\WShell.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,15 +30,42 @@
 
   <ItemGroup>
     <PackageReference Include="Dragablz" Version="0.0.3.234" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
+    <PackageReference Include="MdXaml" Version="1.27.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="pwither.enumkey" Version="1.0.0" />
+    <PackageReference Include="pwither.ev" Version="1.0.4" />
     <PackageReference Include="pwither.formatter" Version="1.0.1" />
+    <PackageReference Include="pwither.IO" Version="1.0.1" />
+    <PackageReference Include="pwither.reg" Version="1.0.1" />
+    <PackageReference Include="pwither.thrd" Version="1.0.1" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Windows\" />
     <Folder Include="wshell\Repos\" />
-    <Folder Include="wshell\Ui\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\bin\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Scap.Api">
+      <HintPath>..\bin\Scap.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="Scap.Bridge">
+      <HintPath>..\bin\Scap.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Scap.Logic">
+      <HintPath>..\bin\Scap.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="Scap.Probes">
+      <HintPath>..\bin\Scap.Probes.dll</HintPath>
+    </Reference>
+    <Reference Include="Scap.ProbesEx">
+      <HintPath>..\bin\Scap.ProbesEx.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

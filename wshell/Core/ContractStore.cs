@@ -10,8 +10,8 @@ namespace wshell.Core
 {
     internal class ContractStore
     {
-        public List<Contract> Contracts { get; }
-        public List<RevokeTokenSource> RevokeTokens { get; }
+        public List<Contract> Contracts { get; } //список для хранения контрактов
+        public List<RevokeTokenSource> RevokeTokens { get; } //список для хранения токенов отзыва
 
         public ContractStore()
         {
@@ -19,7 +19,7 @@ namespace wshell.Core
             RevokeTokens = new List<RevokeTokenSource>();
         }
 
-        public (Contract Contract, RevokeTokenSource RevokeTokenSource) Register(ShellBase shell, IHost host)
+        public (Contract Contract, RevokeTokenSource RevokeTokenSource) Register(ShellBase shell, IHost host) //создает и регистрирует контракт
         {
             if (shell != null)
             {
@@ -32,7 +32,7 @@ namespace wshell.Core
             }
             return (null, null);
         }
-        public void Revoke(ShellBase shell)
+        public void Revoke(ShellBase shell) //отзывает контракт
         {
             var revokeTokenSource = RevokeTokens.FirstOrDefault(x => x.Token.ShellId == shell.ShellInfo.Id);
             if (revokeTokenSource != null)
@@ -53,7 +53,7 @@ namespace wshell.Core
             }
         }
 
-        public void RevokeRange(IEnumerable<ShellBase> shells)
+        public void RevokeRange(IEnumerable<ShellBase> shells) //отзывает множество контрактов
         {
             foreach(var shell in shells)
             {
@@ -61,7 +61,7 @@ namespace wshell.Core
             }
         }
 
-        public (Contract Contract, RevokeTokenSource RevokeTokenSource) Get(ShellBase shell)
+        public (Contract Contract, RevokeTokenSource RevokeTokenSource) Get(ShellBase shell) //получает контракт и токен отзыва
         {
             var revokeTokenSource = RevokeTokens.FirstOrDefault(x => x.Token.ShellId == shell.ShellInfo.Id);
             var contract = Contracts.FirstOrDefault(x => x.DestinationShellId == shell.ShellInfo.Id);

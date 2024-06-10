@@ -13,14 +13,14 @@ namespace wshell.Abstract
 {
     public abstract class ShellBase
     {
-        public ShellInfo ShellInfo { get; }
+        public ShellInfo ShellInfo { get; } //информация о модуле
 
-        public ShellState State { get; private set; }
-        public ShellCallback Callback { get; internal set; }
+        public ShellState State { get; private set; } //текущее состояние модуля
+        public ShellCallback Callback { get; internal set; } //объект общения с программой
 
-        public ShellSettings Settings { get; protected set; }
+        public ShellSettings Settings { get; protected set; } //настройки модуля
 
-        public Guid ContractId { get; internal set; }
+        public Guid ContractId { get; internal set; } //идентификатор контракта
 
         public event EventHandler<Guid> ShellRun;
         public event EventHandler<Guid> ShellStop;
@@ -33,7 +33,7 @@ namespace wshell.Abstract
             State = ShellState.Stopped;
         }
 
-        public ExitCode Stop(ExitCode exitCode = ExitCode.Default)
+        public ExitCode Stop(ExitCode exitCode = ExitCode.Default) //останавливает работу модуля
         {
             if (State != ShellState.Stopped)
             {
@@ -45,7 +45,7 @@ namespace wshell.Abstract
             return ExitCode.AlreadyStopped;
         }
 
-        public void Run()
+        public void Run() //запускает работу модуля
         {
             if (State == ShellState.Stopped)
             {
@@ -55,7 +55,7 @@ namespace wshell.Abstract
             }
         }
 
-        public void Pause()
+        public void Pause() //ставит работу модуля на паузу
         {
             if (State == ShellState.Running)
             {
@@ -65,7 +65,7 @@ namespace wshell.Abstract
             }
         }
 
-        public void Resume()
+        public void Resume() //снимает работу модуля с паузы
         {
             if (State == ShellState.Paused)
             {
@@ -75,12 +75,12 @@ namespace wshell.Abstract
             }
         }
 
-        public abstract void OnRun();
-        public abstract void OnPause();
-        public abstract void OnStop();
-        public abstract void OnResume();
+        public abstract void OnRun(); //реализуемый метод при запуске
+        public abstract void OnPause();  //реализуемый метод при паузе
+        public abstract void OnStop();  //реализуемый метод при остановке
+        public abstract void OnResume();  //реализуемый метод при возобновлении
 
-        public abstract Schema OnHostCallback(Schema schema);
-        public abstract void OnSettingsEdit(SettingsObject obj, PropertyEventArgs propertyEventArgs);
+        public abstract Schema OnHostCallback(Schema schema);  //реализуемый метод при обращении к модулю через callback
+        public abstract void OnSettingsEdit(SettingsObject obj, PropertyEventArgs propertyEventArgs);  //реализуемый метод при изменении настроек модуля извне
     }
 }

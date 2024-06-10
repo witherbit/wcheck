@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 using pwither.formatter;
+using wcheck.Statistic;
+using wshell.Utils;
 
 namespace wshell.Net.Nodes
 {
@@ -41,19 +43,38 @@ namespace wshell.Net.Nodes
         }
         public Node() { }
 
-        public virtual byte[] Pack()
+        public virtual byte[] Pack(SocketInitializeParameters parameters)
         {
-            return BitSerializer.SerializeNative(this,
+            var packedData = BitSerializer.SerializeNative(this,
                 typeof(Node),
-                typeof(Dictionary<string, string>));
+                typeof(Dictionary<string, string>),
+                typeof(StatisticNode));
+            if(parameters.UseEncryption)
+                switch (parameters.AuthType)
+                {
+                    case Enums.SocketAuthType.Aes:
+                        return packedData.EncryptAES(parameters.Key);
+                }
+            return packedData;
             //return JsonConvert.SerializeObject(this).ConvertFromUTF8();
         }
 
-        public static Node Unpack(byte[] arr)
+        public static Node Unpack(byte[] arr, SocketInitializeParameters parameters)
         {
+            if (parameters.UseEncryption)
+                switch (parameters.AuthType)
+                {
+                    case Enums.SocketAuthType.Aes:
+                        var decryptData = arr.DecryptAES(parameters.Key);
+                        return BitSerializer.DeserializeNative<Node>(decryptData,
+                        typeof(Node),
+                        typeof(Dictionary<string, string>),
+                        typeof(StatisticNode));
+                }
             return BitSerializer.DeserializeNative<Node>(arr,
                 typeof(Node),
-                typeof(Dictionary<string, string>));
+                typeof(Dictionary<string, string>),
+                typeof(StatisticNode));
             //return JsonConvert.DeserializeObject<Node>(arr.ConvertToUTF8());
         }
 

@@ -9,7 +9,7 @@ namespace wshell.Abstract
 {
     internal interface IHost
     {
-        ShellCallback Callback { get; }
-        ShellController Controller { get; }
+        ShellCallback Callback { get; } //объект для взаимодействия между модулями
+        ShellController Controller { get; } //объект для контроля модулей
     }
 }

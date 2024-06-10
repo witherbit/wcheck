@@ -45,7 +45,7 @@ namespace wcheck.wshell.Enums
         ShellInfosRequest,
         /// <summary>
         /// Ответ на запрос на получение ShellInfos
-        /// [returned from InvokeRequest] (ShellInfos[])
+        /// [returned from InvokeRequest] (ShellInfo[])
         /// </summary>    
         ShellInfosResponse,
         /// <summary>
@@ -61,12 +61,57 @@ namespace wcheck.wshell.Enums
         /// <summary>
         /// Запрос на получение значения параметра
         /// [InvokeRequest] (string ParameterName)
+        /// Attributes:
+        /// target : string (shellId)
         /// </summary>    
         SettingsParameterRequest,
         /// <summary>
         /// Ответ на запрос на получение значения параметра
         /// [returned from InvokeRequest] (SettingObject)
+        /// Attributes:
+        /// from : string (shellId)
         /// </summary>    
         SettingsParameterResponse,
+        /// <summary>
+        /// Оповещение об изменении настроек модуля
+        /// [Invoke] (string ShellId)
+        /// </summary>
+        ShellPropertyChanged,
+        /// <summary>
+        /// Фокус на активную вкладку
+        /// [Invoke] (Page)
+        /// </summary>
+        SetTabFocus,
+        /// <summary>
+        /// Запуск вcтроенного в компонент задачи метода
+        /// [Invoke] (string targetShellId)
+        /// </summary>
+        StartTaskView,
+        /// <summary>
+        /// Кастомный запрос другому плагину
+        /// [Invoke] (object)
+        /// Attributes:
+        /// target : string (shellId)
+        /// </summary>
+        CustomRequest,
+        /// <summary>
+        /// Кастомный ответ другому плагину
+        /// [Invoke] (object)
+        /// Attributes:
+        /// target : string (shellId)
+        /// </summary>
+        CustomResponse,
+        /// <summary>
+        /// Кастомный вызов другому плагину
+        /// [Invoke] (object)
+        /// Attributes:
+        /// target : string (shellId)
+        /// </summary>
+        CustomInvoke,
+        /// <summary>
+        /// Тип схемы для пользовательских вызовов
+        /// [Data]
+        /// </summary>
+        ShemaValue,
     }
 }

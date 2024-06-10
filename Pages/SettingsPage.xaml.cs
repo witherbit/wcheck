@@ -36,6 +36,7 @@ namespace wcheck.Pages
             uiPropPathTemp.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToTemp);
             uiPropPathLog.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToLog);
             uiPropPathShell.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShell);
+            uiPropPathShellDeps.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToDeps);
             uiPropPathShellSha.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToShellSha);
             uiPropShellAccepted.WText = Settings.GetValue<string>(SettingsParamConsts.ParameterShell.p_AcceptedShell);
             uiPropShellSha.WChecked = Settings.GetValue<bool>(SettingsParamConsts.ParameterShell.p_CheckShell);
@@ -81,6 +82,7 @@ namespace wcheck.Pages
                     FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToTemp, uiPropPathTemp);
                     FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToLog, uiPropPathLog);
                     FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToShell, uiPropPathShell);
+                    FileCheckExist(SettingsParamConsts.ParameterPath.p_PathToDeps,uiPropPathShellDeps);
                 }
                 catch (Exception ex) 
                 {
