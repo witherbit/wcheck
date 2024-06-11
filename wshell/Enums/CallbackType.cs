@@ -113,5 +113,15 @@ namespace wcheck.wshell.Enums
         /// [Data]
         /// </summary>
         ShemaValue,
+        /// <summary>
+        /// Запрос на получение объекта предоставления сокета
+        /// [InvokeRequest]
+        /// </summary>
+        ClientProvidingRequest,
+        /// <summary>
+        /// Ответ на запрос о пулечении предоставления сокета
+        /// [returned from InvokeRequest] (ShellClientProviding)
+        /// </summary>
+        ClientProvidingResponse,
     }
 }

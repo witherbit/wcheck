@@ -48,7 +48,7 @@ namespace wshell.Net.Nodes
             var packedData = BitSerializer.SerializeNative(this,
                 typeof(Node),
                 typeof(Dictionary<string, string>),
-                typeof(StatisticNode));
+                typeof(TaskStatisticNode));
             if(parameters.UseEncryption)
                 switch (parameters.AuthType)
                 {
@@ -62,19 +62,29 @@ namespace wshell.Net.Nodes
         public static Node Unpack(byte[] arr, SocketInitializeParameters parameters)
         {
             if (parameters.UseEncryption)
-                switch (parameters.AuthType)
+                try
                 {
-                    case Enums.SocketAuthType.Aes:
-                        var decryptData = arr.DecryptAES(parameters.Key);
-                        return BitSerializer.DeserializeNative<Node>(decryptData,
-                        typeof(Node),
-                        typeof(Dictionary<string, string>),
-                        typeof(StatisticNode));
+                    switch (parameters.AuthType)
+                    {
+                        case Enums.SocketAuthType.Aes:
+                            var decryptData = arr.DecryptAES(parameters.Key);
+                            return BitSerializer.DeserializeNative<Node>(decryptData,
+                            typeof(Node),
+                            typeof(Dictionary<string, string>),
+                            typeof(TaskStatisticNode));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new Node("bad encryption", ex, new Dictionary<string, string>
+                    {
+                        { "code", "401" }
+                    });
                 }
             return BitSerializer.DeserializeNative<Node>(arr,
                 typeof(Node),
                 typeof(Dictionary<string, string>),
-                typeof(StatisticNode));
+                typeof(TaskStatisticNode));
             //return JsonConvert.DeserializeObject<Node>(arr.ConvertToUTF8());
         }
 
@@ -86,12 +96,13 @@ namespace wshell.Net.Nodes
             }
             return default;
         }
-        public void SetAttribute(string attribute, string value)
+        public Node SetAttribute(string attribute, string value)
         {
             if (!Attributes.ContainsKey(attribute))
             {
                 Attributes.Add(attribute, value);
             }
+            return this;
         }
 
         public override string ToString()

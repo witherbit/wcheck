@@ -106,6 +106,8 @@ namespace wcheck
             if(_shellHost != null)
             {
                 _shellHost.ContractStore.RevokeRange(_shellHost.Controller.Shells);
+                _shellHost.Socket.Close();
+                _shellHost.Socket.Dispose();
             }
         }
 

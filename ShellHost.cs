@@ -1,4 +1,6 @@
-﻿using Dragablz;
+﻿using DocxEngine;
+using DocxEngine.Models;
+using Dragablz;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,13 +16,17 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 using wcheck.Pages;
+using wcheck.Statistic;
 using wcheck.Utils;
 using wcheck.wcontrols;
 using wcheck.wshell.Enums;
 using wcheck.wshell.Objects;
+using wcheck.wshell.Utils;
 using wshell.Abstract;
 using wshell.Core;
 using wshell.Enums;
+using wshell.Net;
+using wshell.Net.Nodes;
 using wshell.Objects;
 using wshell.Utils;
 
@@ -38,6 +44,8 @@ namespace wcheck
 
         public ContractStore ContractStore => Controller.ContractStore;
 
+        public ShellSocket Socket { get; private set; }
+
         public static List<TabItem> Items { get; private set; }
 
         public ShellHost(MainWindow mainWindow, List<SettingsObject> defaultSettings)
@@ -46,6 +54,23 @@ namespace wcheck
             CreateDir();
             Instance = this;
 
+            var networkingConnectionType = (NetworkingConnectionType)Settings.Get(SettingsParamConsts.ParameterConnection.p_Type).Value;
+            var filePath = (string)Settings.Get(SettingsParamConsts.ParameterConnection.p_EncPath).Value;
+            var useEnc = (bool)Settings.Get(SettingsParamConsts.ParameterConnection.p_UseEnc).Value;
+            var port = (int)Settings.Get(SettingsParamConsts.ParameterConnection.p_Port).Value;
+
+            var key = Encoding.UTF8.GetBytes("defaultSharedKey");
+            if(File.Exists(filePath))
+                key = File.ReadAllBytes(filePath);
+
+            Socket = new ShellSocket(new SocketInitializeParameters
+            {
+                AuthType = SocketAuthType.Aes,
+                ConnectionType = networkingConnectionType,
+                Key = key,
+                UseEncryption = useEnc,
+                Port = port
+            });
 
             Logger.Log(new LogContent(WelcomePage.SysInfoGet(), this));
             Logger.Clear();
@@ -67,28 +92,27 @@ namespace wcheck
             Callback.Callback += OnCallback;
             Callback.RequestCallback += OnRequestCallback;
 
-            //AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
-
             UpdateShellMenu();
 
             Items = new List<TabItem>();
 
+            Socket.NodeRequest += OnNodeRequest;
+            Socket.Open();
+
+            StatisticEngine se = new StatisticEngine();
+            se.Nodes.Add(new TaskStatisticNode("Тестирование ГИС", "Отчет по тестированию ИС посредством использования задачи и ПО «wcheck»"));
+            se.Nodes.Add(new TableStatisticNode("Использованные хосты", "Использованные хосты", new List<TableItem>
+            {
+                new TableItem(new InnerText("IP адрес хоста") { IsBold = true }, 0, 0), new TableItem(new InnerText("Группа хоста") { IsBold = true }, 1, 0), new TableItem(new InnerText("Сведения о системе") { IsBold = true }, 2, 0),
+                new TableItem(new InnerText("192.168.0.222"), 0, 1), new TableItem(new InnerText("Главный офис"), 1, 1), new TableItem(new InnerText("ОС: Windows 11\r\nUser: Tanukii"), 2, 1),
+            }));
+            se.CreateDocx();
         }
 
-        //private Assembly? ResolveAssembly(object? sender, ResolveEventArgs args)
-        //{
-        //    var name = args.Name.Substring(0, args.Name.IndexOf(',')) + ".dll";
-        //    foreach (var i in Directory.EnumerateFiles(Settings.GetValue<string>(SettingsParamConsts.ParameterPath.p_PathToDeps), "*.dll", SearchOption.AllDirectories))
-        //    {
-        //        if (i.Contains(name))
-        //        {
-        //            var raw = File.ReadAllBytes(i);
-        //            var assembly = Assembly.Load(raw);
-        //            return assembly;
-        //        }
-        //    }
-        //    return null;
-        //}
+        private Node OnNodeRequest(ShellSocket socket, Node schema)
+        {
+            return schema.HandleNode();
+        }
 
         private Schema OnRequestCallback(ShellBase shell, Schema schema)
         {
@@ -104,6 +128,9 @@ namespace wcheck
                     foreach (var shl in Controller.Shells)
                         infs.Add(shl.ShellInfo);
                     return new Schema(CallbackType.ShellInfosResponse).SetProviding(infs.ToArray());
+
+                case CallbackType.ClientProvidingRequest:
+                    return new Schema(CallbackType.ClientProvidingResponse).SetProviding(Socket.CreateClientProviding());
 
                 case CallbackType.GetShellInstanceRequest:
                     return new Schema(CallbackType.GetShellInstanceResponse).SetProviding(Controller.GetShellById(schema.GetProviding<ShellInfo>().Id));

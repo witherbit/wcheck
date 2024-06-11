@@ -9,6 +9,7 @@ using wcheck;
 using wcheck.wshell.Enums;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
+using wshell.Net;
 
 namespace wshell.Utils
 {
@@ -30,6 +31,22 @@ namespace wshell.Utils
                 schema.SetAttribute("target", shellId);
             var response = shell.Callback.InvokeRequest(shell, schema);
             return response.GetProviding<SettingsObject>();
+        }
+
+        /// <summary>
+        ///  Запрос параметра приложения или модуля
+        /// </summary>
+        /// <param name="shell">Модуль</param>
+        /// <param name="propertyName">Имя параметра</param>
+        /// <param name="shellId">Id модуля</param>
+        /// <returns></returns>
+        public static ShellClientProviding? RequestClientProviding(this ShellBase shell)
+        {
+            var schema = new Schema(CallbackType.ClientProvidingRequest);
+            var response = shell.Callback.InvokeRequest(shell, schema);
+            if (response.Type == CallbackType.ClientProvidingResponse)
+                return response.GetProviding<ShellClientProviding>();
+            else return null;
         }
 
         /// <summary>

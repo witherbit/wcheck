@@ -15,7 +15,7 @@ using wshell.Net.Nodes;
 
 namespace wshell.Net
 {
-    public class ShellSocket : IDisposable
+    internal class ShellSocket : IDisposable
     {
         private bool disposedValue;
 
@@ -193,6 +193,14 @@ namespace wshell.Net
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public ShellClientProviding CreateClientProviding()
+        {
+            return new ShellClientProviding()
+            {
+                _socket = this
+            };
         }
     }
 }
