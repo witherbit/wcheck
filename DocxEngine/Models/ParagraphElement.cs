@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using pwither.formatter;
 using DocumentFormat.OpenXml.Packaging;
+using System.Security.Policy;
+using System.Windows.Controls;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using System.Windows;
 
 namespace DocxEngine.Models
 {
@@ -30,7 +33,12 @@ namespace DocxEngine.Models
         }
         public void InsertElement(Body body, WordprocessingDocument document)
         {
-            body.Append(GetParagraph());
+            if(Style.IsHyperlink && Style.HyperlinkUrl != null)
+            {
+                body.Append(GetParagraphWithHyperlink(document));
+            }
+            else
+                body.Append(GetParagraph());
         }
 
         public ParagraphElement SetRun(string text)
@@ -107,6 +115,7 @@ namespace DocxEngine.Models
         internal Paragraph GetParagraph()
         {
             Paragraph paragraph = new Paragraph(new Run(new Text(Text)));
+            
             paragraph.ParagraphProperties = new ParagraphProperties(
             new Justification() { Val = Style.Alignment },
             new SpacingBetweenLines() { After = Convert.ToInt32(Style.SpacingAfter * 566.929).ToString(), Before = Convert.ToInt32(Style.SpacingBefore * 566.929).ToString(), Line = Convert.ToInt32(Style.SpacingBetweenLines * 240).ToString(), LineRule = LineSpacingRuleValues.Auto },
@@ -142,17 +151,81 @@ namespace DocxEngine.Models
                 runProperties.Append(new Underline() { Val = UnderlineValues.Single });
             }
 
+            if (Style.Color != null)
+            {
+                Color color = new Color() { Val = Style.Color };
+                runProperties.Append(color);
+            }
+                
+
+            paragraph.GetFirstChild<Run>().PrependChild(runProperties);
+            return paragraph;
+        }
+        internal Paragraph GetParagraphWithHyperlink(WordprocessingDocument document)
+        {
+            Paragraph paragraph = new Paragraph(new Run(new Text(Text)));
+            if (Style.IsHyperlink && Style.HyperlinkUrl != null)
+            {
+                string hyperid = "hid_" + ((int)Guid.NewGuid().ToByteArray()[0] +(int)Guid.NewGuid().ToByteArray().Last());
+                MainDocumentPart mainPart = document.MainDocumentPart;
+                mainPart.AddHyperlinkRelationship(new System.Uri(Style.HyperlinkUrl), true, hyperid);
+                Hyperlink hyperlink = new Hyperlink(new Run(new Text(Text))) { Id = hyperid };
+                paragraph = new Paragraph(new Run(hyperlink));
+            }
+
+            paragraph.ParagraphProperties = new ParagraphProperties(
+            new Justification() { Val = Style.Alignment },
+            new SpacingBetweenLines() { After = Convert.ToInt32(Style.SpacingAfter * 566.929).ToString(), Before = Convert.ToInt32(Style.SpacingBefore * 566.929).ToString(), Line = Convert.ToInt32(Style.SpacingBetweenLines * 240).ToString(), LineRule = LineSpacingRuleValues.Auto },
+            new Indentation()
+            {
+                Left = Convert.ToInt32(Style.LeftIndent * 566.929).ToString(),
+                Right = Convert.ToInt32(Style.RightIndent * 566.929).ToString(),
+                FirstLine = Convert.ToInt32(Style.FirstLineIndent * 566.929).ToString()
+            }
+        );
+
+            RunProperties runProperties = new RunProperties(
+        new RunFonts() { Ascii = Style.FontFamily, HighAnsi = Style.FontFamily },
+        new FontSize() { Val = (Style.FontSize * 2).ToString() });
+
+            if (Style.IsBold)
+            {
+                runProperties.Append(new Bold());
+            }
+
+            if (Style.IsItalic)
+            {
+                runProperties.Append(new Italic());
+            }
+
+            if (Style.IsStrikeThrough)
+            {
+                runProperties.Append(new Strike());
+            }
+
+            if (Style.IsUnderline)
+            {
+                runProperties.Append(new Underline() { Val = UnderlineValues.Single });
+            }
+
+            if (Style.Color != null)
+                runProperties.Append(new Color() { Val = Style.Color });
+            else
+                runProperties.Append(new Color() { Val = "#0006ff" });
+
+
+
             paragraph.GetFirstChild<Run>().PrependChild(runProperties);
             return paragraph;
         }
     }
-    [BitSerializable]
     public class ParagraphElementStyle
     {
         public bool IsBold { get; set; } = false;
         public bool IsItalic { get; set; } = false;
         public bool IsStrikeThrough { get; set; } = false;
         public bool IsUnderline { get; set; } = false;
+        public bool IsHyperlink { get; set; } = false;
         public double FontSize { get; set; } = 14;
         public string FontFamily { get; set; } = "Times New Roman";
         public JustificationValues Alignment { get; set; } = JustificationValues.Left;
@@ -162,6 +235,8 @@ namespace DocxEngine.Models
         public double SpacingBetweenLines { get; set; } = 1;
         public double SpacingBefore { get; set; } = 0;
         public double SpacingAfter { get; set; } = 0;
+        public string? Color { get; set; }
+        public string? HyperlinkUrl { get; set; }
     }
 }
 

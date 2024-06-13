@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infosystems.task.shellv1", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tview.nmap.shellv1", "..\tview.nmap.shellv1\tview.nmap.shellv1.csproj", "{EAED759E-C5A5-4710-93D3-F0A1D25CD997}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImporterShells", "..\ImporterShells\ImporterShells.csproj", "{602E1F79-A52B-47F9-9E37-680A49A8D30B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EAED759E-C5A5-4710-93D3-F0A1D25CD997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAED759E-C5A5-4710-93D3-F0A1D25CD997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAED759E-C5A5-4710-93D3-F0A1D25CD997}.Release|Any CPU.Build.0 = Release|Any CPU
+		{602E1F79-A52B-47F9-9E37-680A49A8D30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{602E1F79-A52B-47F9-9E37-680A49A8D30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{602E1F79-A52B-47F9-9E37-680A49A8D30B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{602E1F79-A52B-47F9-9E37-680A49A8D30B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

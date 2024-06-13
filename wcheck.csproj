@@ -33,6 +33,7 @@
     <PackageReference Include="DocumentFormat.OpenXml.Features" Version="3.0.2" />
     <PackageReference Include="Dragablz" Version="0.0.3.234" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc2" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
     <PackageReference Include="MdXaml" Version="1.27.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

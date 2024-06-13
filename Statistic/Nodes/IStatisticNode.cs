@@ -9,13 +9,12 @@ using DocumentFormat.OpenXml.Packaging;
 using DocxEngine;
 using pwither.formatter;
 
-namespace wcheck.Statistic
+namespace wcheck.Statistic.Nodes
 {
     public interface IStatisticNode
     {
-        string Name { get; }
         string GetCSV();
         void InsertDocx(Docx doc);
-        object Render();
+        void Render(StackPanel panel);
     }
 }

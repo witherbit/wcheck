@@ -17,6 +17,8 @@ using System.Windows.Navigation;
 using System.Xml.Linq;
 using wcheck.Pages;
 using wcheck.Statistic;
+using wcheck.Statistic.Items;
+using wcheck.Statistic.Nodes;
 using wcheck.Utils;
 using wcheck.wcontrols;
 using wcheck.wshell.Enums;
@@ -98,15 +100,6 @@ namespace wcheck
 
             Socket.NodeRequest += OnNodeRequest;
             Socket.Open();
-
-            StatisticEngine se = new StatisticEngine();
-            se.Nodes.Add(new TaskStatisticNode("Тестирование ГИС", "Отчет по тестированию ИС посредством использования задачи и ПО «wcheck»"));
-            se.Nodes.Add(new TableStatisticNode("Использованные хосты", "Использованные хосты", new List<TableItem>
-            {
-                new TableItem(new InnerText("IP адрес хоста") { IsBold = true }, 0, 0), new TableItem(new InnerText("Группа хоста") { IsBold = true }, 1, 0), new TableItem(new InnerText("Сведения о системе") { IsBold = true }, 2, 0),
-                new TableItem(new InnerText("192.168.0.222"), 0, 1), new TableItem(new InnerText("Главный офис"), 1, 1), new TableItem(new InnerText("ОС: Windows 11\r\nUser: Tanukii"), 2, 1),
-            }));
-            se.CreateDocx();
         }
 
         private Node OnNodeRequest(ShellSocket socket, Node schema)

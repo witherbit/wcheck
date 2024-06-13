@@ -15,6 +15,7 @@ namespace DocxEngine
     public class Docx : IDisposable
     {
         private bool _isFinalized = false;
+        internal event EventHandler _finalize;
         internal string _fileName {  get; set; }
         public bool AutoTransfersWords { get; set; }
         internal List<IDocxElement> Elements { get; private set; }
@@ -46,6 +47,7 @@ namespace DocxEngine
                     }
                     mainPart.Document.Append(body);
                 }
+                _finalize?.Invoke(this, null);
             }
         }
         public Docx AddParagraph(ParagraphElement element)
@@ -59,6 +61,11 @@ namespace DocxEngine
             return this;
         }
         public Docx AddImage(ImageElement element)
+        {
+            Elements.Add(element);
+            return this;
+        }
+        public Docx AddBreak(BreakElement element)
         {
             Elements.Add(element);
             return this;

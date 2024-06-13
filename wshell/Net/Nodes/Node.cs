@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 using pwither.formatter;
-using wcheck.Statistic;
+using wcheck.Statistic.Nodes;
 using wshell.Utils;
 
 namespace wshell.Net.Nodes
@@ -48,7 +48,7 @@ namespace wshell.Net.Nodes
             var packedData = BitSerializer.SerializeNative(this,
                 typeof(Node),
                 typeof(Dictionary<string, string>),
-                typeof(TaskStatisticNode));
+                typeof(TextStatisticNode));
             if(parameters.UseEncryption)
                 switch (parameters.AuthType)
                 {
@@ -71,7 +71,7 @@ namespace wshell.Net.Nodes
                             return BitSerializer.DeserializeNative<Node>(decryptData,
                             typeof(Node),
                             typeof(Dictionary<string, string>),
-                            typeof(TaskStatisticNode));
+                            typeof(TextStatisticNode));
                     }
                 }
                 catch (Exception ex)
@@ -84,7 +84,7 @@ namespace wshell.Net.Nodes
             return BitSerializer.DeserializeNative<Node>(arr,
                 typeof(Node),
                 typeof(Dictionary<string, string>),
-                typeof(TaskStatisticNode));
+                typeof(TextStatisticNode));
             //return JsonConvert.DeserializeObject<Node>(arr.ConvertToUTF8());
         }
 
