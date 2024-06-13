@@ -13,6 +13,7 @@ namespace wshell.Abstract
 {
     public abstract class ShellBase
     {
+        internal EventRedirect? _eventsRedirect;
         public ShellInfo ShellInfo { get; } //информация о модуле
 
         public ShellState State { get; private set; } //текущее состояние модуля
