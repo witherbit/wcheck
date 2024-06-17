@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocxEngine;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 using wcheck.Documents;
 using wcheck.Pages;
+using wcheck.Statistic.Items;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
 

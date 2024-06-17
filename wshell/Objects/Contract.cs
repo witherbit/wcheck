@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using wcheck;
 using wcheck.Utils;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
@@ -54,7 +55,8 @@ namespace wshell.Objects
 
         public Schema Invoke(Schema schema) //отправка запроса модулю от хоста через контракт
         {
-            Logger.Log(new LogContent($"Invoke contract {Id} callback request to {_shell.ShellInfo.Id} [{_shell.ShellInfo.Name}] ", this));
+            ShellHost.Log($"Invoke contract {Id} callback request to {_shell.ShellInfo.Id} [{_shell.ShellInfo.Name}] ");
+            //Logger.Log(new LogContent(, this));
             return _shell.OnHostCallback(schema);
         }
     }

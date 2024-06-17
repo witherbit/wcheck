@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using NLog.Targets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using wcheck.wcontrols;
+using wcheck.wshell.Objects;
+using wshell.Abstract;
 using wshell.Net.Nodes;
 
 namespace wcheck.wshell.Utils
@@ -16,6 +21,14 @@ namespace wcheck.wshell.Utils
             if(node.Tag == "system params" && node.GetAttribute("type") == "request")
             {
                 return node.HandleSystemParameters();
+            }
+            else if (node.Tag == "redirect request")
+            {
+                return node.HandleRedirect();
+            }
+            else if (node.Tag == "run shell")
+            {
+                return node.HandleRunShell();
             }
             return new Node("empty", new Dictionary<string, string>
                 {
@@ -33,6 +46,39 @@ namespace wcheck.wshell.Utils
                 { "machine name",  GetMachineName() },
                 { "user",  GetUser() },
             });
+        }
+
+        public static Node HandleRedirect(this Node node)
+        {
+            var target = node.GetAttribute("target");
+            ShellHost.Log($"Handle redirect request for {target}: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
+            var schema = ShellHost.InvokeRequest(target, new Schema(Enums.CallbackType.RedirectNetRequest).SetProviding(node).SetAttribute("target", target));
+            ShellHost.Log($"Returned redirect response data: {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
+            if (schema.Type == Enums.CallbackType.EmptyResponse)
+                return new Node("underfined redirect response", new Dictionary<string, string>
+                {
+                    { "code", "404" }
+                });
+            var rnode = schema.GetProviding<Node>();
+            if(rnode != null)
+            {
+                rnode.Tag = "redirect response";
+                return rnode;
+            }
+            return new Node("underfined redirect response", new Dictionary<string, string>
+                {
+                    { "code", "404" }
+                });
+        }
+
+        public static Node HandleRunShell(this Node node)
+        {
+            ShellHost.Log($"Handle run shell request: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
+            ShellHost.Instance.HostWindow.Invoke(() =>
+            {
+                ShellHost.Instance.Controller.GetShellById(node.GetAttribute("target")).Run();
+            });
+            return new Node("run shell accepted").SetAttribute("code", "200");
         }
 
         private static string GetOS()

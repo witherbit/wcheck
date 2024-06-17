@@ -98,6 +98,7 @@ namespace wshell.Net
                 if (!CancellationToken.IsCancellationRequested)
                     if (node != null && node.Tag != "exception" && node.Tag != "empty")
                     {
+                        node.SetAttribute("from", ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
                         var data = NodeRequest?.Invoke(this, node).Pack(InitializeParameters);
                         await stream.WriteAsync(data, 0, data.Length);
                     }

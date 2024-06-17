@@ -41,7 +41,11 @@ namespace wshell.Net.Nodes
             Tag = tag;
             Attributes = new Dictionary<string, string>();
         }
-        public Node() { }
+        public Node() 
+        {
+            Tag = null;
+            Attributes = new Dictionary<string, string>();
+        }
 
         public virtual byte[] Pack(SocketInitializeParameters parameters)
         {

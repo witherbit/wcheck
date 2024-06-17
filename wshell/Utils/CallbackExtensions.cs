@@ -166,6 +166,18 @@ namespace wshell.Utils
             return new Schema(CallbackType.EmptyResponse);
         }
 
+        internal static Schema InvokeNetRequest(this IHost host, string targetShellId, Schema schema)
+        {
+            var store = host.Controller.ContractStore;
+            var shell = host.Controller.GetShellById(targetShellId);
+            var storeInfo = store.Get(shell);
+            if (storeInfo.Contract != null)
+            {
+                return storeInfo.Contract.Invoke(schema);
+            }
+            return new Schema(CallbackType.EmptyResponse);
+        }
+
         #endregion
     }
 }

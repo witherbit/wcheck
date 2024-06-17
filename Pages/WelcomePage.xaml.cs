@@ -65,7 +65,7 @@ namespace wcheck.Pages
                 BorderThickness = new Thickness(0),
                 Margin = new Thickness(0, 0, 0, 10)
             });
-            uiScrollLogs.ScrollToEnd();
+            //uiScrollLogs.ScrollToEnd();
         }
 
         private static string GetIp()

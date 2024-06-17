@@ -1,6 +1,7 @@
 ﻿using DocxEngine;
 using DocxEngine.Models;
 using Dragablz;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -109,7 +110,8 @@ namespace wcheck
 
         private Schema OnRequestCallback(ShellBase shell, Schema schema)
         {
-            Logger.Log(new LogContent($"Callback request from {shell.ShellInfo.Id} [{shell.ShellInfo.Name}]\r\nType: {schema.Type}", this));
+
+            Log($"Callback request from {shell.ShellInfo.Id} [{shell.ShellInfo.Name}]\r\nType: {schema.Type}");
             switch (schema.Type)
             {
                 case CallbackType.ReloadPageRequest:
@@ -261,8 +263,27 @@ namespace wcheck
 
         public static Schema InvokeRequest(ShellBase shell, Schema schema)
         {
+            Log($"Continue redirect to {shell} [{shell.ShellInfo.Id.ToString()}]");
             var result = Instance.ContractStore.Get(shell);
+            Log($"Contract exist = {result.Contract != null}");
             return result.Contract.Invoke(schema);
+        }
+
+        public static Schema InvokeRequest(string shellId, Schema schema)
+        {
+            var shell = Instance.Controller.GetShellById(shellId);
+            Log($"Get redirect to {shell} [{shellId}]: {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
+            if (shell == null)
+                return new Schema(CallbackType.EmptyResponse);
+            return InvokeRequest(shell, schema);
+        }
+
+        public static void Log(string message)
+        {
+            ShellHost.Instance.HostWindow.Invoke(() =>
+            {
+                Logger.Log(new LogContent(message, Instance));
+            });
         }
 
         private void CreateDir()

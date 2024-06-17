@@ -123,5 +123,19 @@ namespace wcheck.wshell.Enums
         /// [returned from InvokeRequest] (ShellClientProviding)
         /// </summary>
         ClientProvidingResponse,
+        /// <summary>
+        /// Запрос Networking
+        /// [Callback only] (Node)
+        /// Attributes:
+        /// target : string (shellId)
+        /// </summary>
+        RedirectNetRequest,
+        /// <summary>
+        /// Возврат Networking ответа
+        /// [return Shell only] (Node)
+        /// Attributes:
+        /// target : string (shellId)
+        /// </summary>
+        RedirectNetResponse
     }
 }
