@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using NLog.Targets;
+using pwither.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +30,10 @@ namespace wcheck.wshell.Utils
             {
                 return node.HandleRunShell();
             }
+            else if (node.Tag == "download part")
+            {
+                return node.HandleDownloadFilePart();
+            }
             return new Node("empty", new Dictionary<string, string>
                 {
                     { "code", "501" }
@@ -51,9 +55,7 @@ namespace wcheck.wshell.Utils
         public static Node HandleRedirect(this Node node)
         {
             var target = node.GetAttribute("target");
-            ShellHost.Log($"Handle redirect request for {target}: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
             var schema = ShellHost.InvokeRequest(target, new Schema(Enums.CallbackType.RedirectNetRequest).SetProviding(node).SetAttribute("target", target));
-            ShellHost.Log($"Returned redirect response data: {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
             if (schema.Type == Enums.CallbackType.EmptyResponse)
                 return new Node("underfined redirect response", new Dictionary<string, string>
                 {
@@ -71,9 +73,19 @@ namespace wcheck.wshell.Utils
                 });
         }
 
+        public static Node HandleDownloadFilePart(this Node node)
+        {
+            var tempPath = (string)ShellHost.Settings.Get(SettingsParamConsts.ParameterPath.p_PathToTemp).Value;
+            var fileId = node.GetAttribute("content id");
+            var index = int.Parse(node.GetAttribute("content part index"));
+            var fileName = tempPath + $@"\{fileId}.wuniversal";
+            File file = new File(fileName, 4096);
+            var part = file.ReadPart(index);
+            return new Node("part content", part);
+        }
+
         public static Node HandleRunShell(this Node node)
         {
-            ShellHost.Log($"Handle run shell request: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
             ShellHost.Instance.HostWindow.Invoke(() =>
             {
                 ShellHost.Instance.Controller.GetShellById(node.GetAttribute("target")).Run();

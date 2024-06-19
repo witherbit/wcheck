@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 using pwither.formatter;
+using pwither.IO;
+using wcheck.Statistic.Enums;
+using wcheck.Statistic.Items;
 using wcheck.Statistic.Nodes;
+using wcheck.Statistic.Styles;
+using wcheck.Statistic.Templates;
 using wshell.Utils;
 
 namespace wshell.Net.Nodes
@@ -51,9 +56,27 @@ namespace wshell.Net.Nodes
         {
             var packedData = BitSerializer.SerializeNative(this,
                 typeof(Node),
-                typeof(Dictionary<string, string>),
-                typeof(TextStatisticNode));
-            if(parameters.UseEncryption)
+                            typeof(Dictionary<string, string>),
+                            typeof(TextStatisticNode),
+                            typeof(TextAligment),
+                            typeof(CeilItem),
+                            typeof(ImageItem),
+                            typeof(PieItem),
+                            typeof(BreakStatisticNode),
+                            typeof(ImageStatisticNode),
+                            typeof(PieStatisticNode),
+                            typeof(TableStatisticNode),
+                            typeof(TextStatisticNode),
+                            typeof(ImageNodeStyle),
+                            typeof(TableNodeStyle),
+                            typeof(TextNodeStyle),
+                            typeof(IStatisticNode),
+                            typeof(IStatisticTemplate),
+                            typeof(List<IStatisticNode>),
+                            typeof(FilePart),
+                            typeof(NetHandleStatisticTemplate),
+                            typeof(WpfThinkness));
+            if (parameters.UseEncryption)
                 switch (parameters.AuthType)
                 {
                     case Enums.SocketAuthType.Aes:
@@ -75,7 +98,25 @@ namespace wshell.Net.Nodes
                             return BitSerializer.DeserializeNative<Node>(decryptData,
                             typeof(Node),
                             typeof(Dictionary<string, string>),
-                            typeof(TextStatisticNode));
+                            typeof(TextStatisticNode),
+                            typeof(TextAligment),
+                            typeof(CeilItem),
+                            typeof(ImageItem),
+                            typeof(PieItem),
+                            typeof(BreakStatisticNode),
+                            typeof(ImageStatisticNode),
+                            typeof(PieStatisticNode),
+                            typeof(TableStatisticNode),
+                            typeof(TextStatisticNode),
+                            typeof(ImageNodeStyle),
+                            typeof(TableNodeStyle),
+                            typeof(TextNodeStyle),
+                            typeof(IStatisticNode),
+                            typeof(IStatisticTemplate),
+                            typeof(List<IStatisticNode>),
+                            typeof(FilePart),
+                            typeof(NetHandleStatisticTemplate),
+                            typeof(WpfThinkness));
                     }
                 }
                 catch (Exception ex)
@@ -87,8 +128,26 @@ namespace wshell.Net.Nodes
                 }
             return BitSerializer.DeserializeNative<Node>(arr,
                 typeof(Node),
-                typeof(Dictionary<string, string>),
-                typeof(TextStatisticNode));
+                            typeof(Dictionary<string, string>),
+                            typeof(TextStatisticNode),
+                            typeof(TextAligment),
+                            typeof(CeilItem),
+                            typeof(ImageItem),
+                            typeof(PieItem),
+                            typeof(BreakStatisticNode),
+                            typeof(ImageStatisticNode),
+                            typeof(PieStatisticNode),
+                            typeof(TableStatisticNode),
+                            typeof(TextStatisticNode),
+                            typeof(ImageNodeStyle),
+                            typeof(TableNodeStyle),
+                            typeof(TextNodeStyle),
+                            typeof(IStatisticNode),
+                            typeof(IStatisticTemplate),
+                            typeof(List<IStatisticNode>),
+                            typeof(FilePart),
+                            typeof(NetHandleStatisticTemplate),
+                            typeof(WpfThinkness));
             //return JsonConvert.DeserializeObject<Node>(arr.ConvertToUTF8());
         }
 

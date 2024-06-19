@@ -19,17 +19,15 @@ namespace wcheck.Statistic
     public class StatisticEngine
     {
         public List<IStatisticNode> Nodes { get; }
-        public DateTime DateTime { get; }
-        public DateTime UtcDateTime { get; }
         public string Header { get; }
+        public string StatisticId { get; }
 
         public StatisticEngine(string? header = null, TextNodeStyle style = null)
         {
-            DateTime= DateTime.Now;
-            UtcDateTime = DateTime.Now;
             Nodes = new List<IStatisticNode>();
             Header = header;
-            if(header != null)
+            StatisticId = Guid.NewGuid().ToString().ToUpper().Replace("-", "").Remove(5);
+            if (header != null)
             {
                 var completeStyle = style != null ? style : new TextNodeStyle();
                 Nodes.Add(new TextStatisticNode(Header, completeStyle));

@@ -18,11 +18,6 @@ namespace wcheck.Statistic.Items
         public byte[] Raw { get; set; }
         public string PathToDirectory { get; set; }
         public string? FileName { get; private set; }
-        public ImageItem(UIElement source, string pathToDirectory)
-        {
-            Raw = source.ConvertElementToJpg(1, 100);
-            PathToDirectory = pathToDirectory;
-        }
         public ImageItem(byte[] raw, string pathToDirectory)
         {
             Raw = raw;

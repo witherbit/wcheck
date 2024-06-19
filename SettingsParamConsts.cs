@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace wcheck
 {
     public static class SettingsParamConsts
     {
+        public static readonly string Build = "0.9.6";
+        public static readonly string BuildType = "beta";
+        public static readonly string Company = "witherbit";
+        public static readonly string Author = "Сизов А.И.";
+        public static readonly string Support = "xttwercs@vk.com";
         public struct ParameterPath
         {
             public static readonly string p_PathToXds = "pXsdPath";

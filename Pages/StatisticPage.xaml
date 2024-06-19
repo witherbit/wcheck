@@ -8,7 +8,34 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StatisticPage">
 
-    <Grid>
-        
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="40"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock FontFamily="Arial" Text="Отчет загружается, пожалуйста, подождите немного" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#1f1f1f" Name="uiCaption"/>
+
+        <Grid Grid.Column="1" Background="#1f1f1f" Margin="0 40"/>
+
+        <StackPanel Grid.Column="2">
+            <Button Height="30" Width="30" Margin="5" Click="uiCloseTab_Click"  Foreground="#fca577" Background="#1f1f1f" ToolTip="Закрыть вкладку" x:Name="uiCloseTab" VerticalAlignment="Top" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignCloseItemCommandButtonStyle}">
+                
+            </Button>
+            <Border Cursor="Hand" Margin="5" Background="#1f1f1f" Height="30" Width="30" CornerRadius="100" Grid.Column="2" x:Name="uiSave" ToolTip="Сохранить/Экспортировать" MouseEnter="uiSave_MouseEnter"  MouseLeave="uiSave_MouseLeave"  MouseLeftButtonDown="uiSave_MouseLeftButtonDown"  MouseLeftButtonUp="uiSave_MouseLeftButtonUp">
+                <Path
+    x:Name="uiDeleteIcon"
+     Width="20"
+     Height="20"
+     Data="M 7 10 L 18 10 M 15 6 L 15 5 C 15 4 14 3 13 3 L 7 3 C 5 3 5 4 5 5 L 5 15 C 5 16 6 17 7 17 L 13 17 C 14 17 15 16 15 15 L 15 14 M 16 12 L 18.6 9.6 M 16 8 L 18.6 10.6"
+     Stroke="White"
+     StrokeThickness="1.5" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Border>
+        </StackPanel>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False">
+            <StackPanel x:Name="uiPanel"/>
+        </ScrollViewer>
     </Grid>
 </Page>

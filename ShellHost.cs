@@ -263,16 +263,13 @@ namespace wcheck
 
         public static Schema InvokeRequest(ShellBase shell, Schema schema)
         {
-            Log($"Continue redirect to {shell} [{shell.ShellInfo.Id.ToString()}]");
             var result = Instance.ContractStore.Get(shell);
-            Log($"Contract exist = {result.Contract != null}");
             return result.Contract.Invoke(schema);
         }
 
         public static Schema InvokeRequest(string shellId, Schema schema)
         {
             var shell = Instance.Controller.GetShellById(shellId);
-            Log($"Get redirect to {shell} [{shellId}]: {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
             if (shell == null)
                 return new Schema(CallbackType.EmptyResponse);
             return InvokeRequest(shell, schema);

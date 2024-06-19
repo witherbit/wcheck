@@ -136,6 +136,11 @@ namespace wcheck.wshell.Enums
         /// Attributes:
         /// target : string (shellId)
         /// </summary>
-        RedirectNetResponse
+        RedirectNetResponse,
+        /// <summary>
+        /// Открыть отчет
+        /// [Invoke] (StatisticEngine)
+        /// </summary>
+        OpenStatistics
     }
 }

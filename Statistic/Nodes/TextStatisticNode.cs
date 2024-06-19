@@ -61,7 +61,8 @@ namespace wcheck.Statistic.Nodes
                 FontFamily = new System.Windows.Media.FontFamily(Style.WpfFontFamily),
                 Margin = new System.Windows.Thickness(Style.WpfMargin.Left, Style.WpfMargin.Top, Style.WpfMargin.Right, Style.WpfMargin.Bottom),
                 Foreground = Style.WpfOverForeground.GetBrush(),
-                VerticalAlignment = System.Windows.VerticalAlignment.Center
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                TextWrapping = TextWrapping.WrapWithOverflow
             };
             switch (Style.Aligment)
             {

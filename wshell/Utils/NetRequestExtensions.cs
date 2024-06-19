@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using pwither.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace wcheck.wshell.Utils
         internal async static Task<NetSchema.SystemParameters?> GetSystemParametersAsync(this ShellSocket shellSocket, string target)
         {
             var node = await shellSocket.RequestAsync(IPAddress.Parse(target), new Node("system params").SetAttribute("type", "request"), shellSocket.CancellationToken);
-            ShellHost.Log($"Sending node to {target}: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
             if (node.Tag != "system params")
                 return null;
             return new NetSchema.SystemParameters
@@ -30,7 +30,6 @@ namespace wcheck.wshell.Utils
         {
             node.Tag = "redirect request";
             node.SetAttribute("target", shellId);
-            ShellHost.Log($"Sending node to {target}: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
             var rnode = await shellSocket.RequestAsync(IPAddress.Parse(target), node, shellSocket.CancellationToken);
             return rnode;
         }
@@ -38,9 +37,18 @@ namespace wcheck.wshell.Utils
         {
             var node = new Node("run shell");
             node.SetAttribute("target", shellId);
-            ShellHost.Log($"Sending node to {target}: {JsonConvert.SerializeObject(node, Formatting.Indented)}");
             var rnode = await shellSocket.RequestAsync(IPAddress.Parse(target), node, shellSocket.CancellationToken);
             return rnode;
+        }
+        internal async static Task<FilePart?> GetFilePartAsync(this ShellSocket shellSocket, string target, string contentId, int contentIndex)
+        {
+            var node = new Node("download part");
+            node.SetAttribute("content id", contentId);
+            node.SetAttribute("content part index", contentIndex.ToString());
+            var rnode = await shellSocket.RequestAsync(IPAddress.Parse(target), node, shellSocket.CancellationToken);
+            if (rnode.Tag != "part content")
+                return null;
+            return rnode.Child as FilePart;
         }
         public async static Task<NetSchema.SystemParameters?> GetSystemParametersAsync(this ShellClientProviding clientProviding, string target)
         {
@@ -55,6 +63,11 @@ namespace wcheck.wshell.Utils
         public async static Task<Node> GetRunShellAsync(this ShellClientProviding clientProviding, string target, string shellId)
         {
             return await clientProviding._socket.GetRunShellAsync(target, shellId);
+        }
+
+        public async static Task<FilePart?> GetFilePartAsync(this ShellClientProviding clientProviding, string target, string contentId, int contentIndex)
+        {
+            return await clientProviding._socket.GetFilePartAsync(target, contentId, contentIndex);
         }
     }
 

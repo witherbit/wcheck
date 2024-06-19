@@ -208,16 +208,17 @@
                                   Name="uiMenuItem_0x0"
                                   IsEnabled="False"
                                   Click="MenuItem_Click"
+                                  Visibility="Collapsed"
                                   />
-                        <MenuItem Header="Импортировать задание из файла"
+                        <MenuItem Header="Открыть отчет"
                                   Name="uiMenuItem_0x1"
-                                  IsEnabled="False"
                                   Click="MenuItem_Click"
                                   />
                         <MenuItem Name="uiMenuItem_0x2"
                                   Header="Сохранить задание в файл"
                                   IsEnabled="False"
                                   Click="MenuItem_Click"
+                                  Visibility="Collapsed"
                                   />
                         <Separator />
                         <MenuItem Header="Настройки"

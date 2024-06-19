@@ -79,6 +79,9 @@ namespace wcheck.Statistic.Nodes
                 Height = 400,
                 Width = 400,
                 Series = series,
+                FontFamily = new System.Windows.Media.FontFamily("Arial"),
+                SnapsToDevicePixels = true,
+                UseLayoutRounding = true,
 
             };
             var skChart = new SKPieChart(chart) { Width = 400, Height = 400, DrawMargin = new LiveChartsCore.Measure.Margin(5) };
@@ -89,7 +92,36 @@ namespace wcheck.Statistic.Nodes
 
         public void Render(StackPanel panel)
         {
-            
+            var series = new List<ISeries>();
+            foreach (var pie in Pies)
+            {
+                var s = new PieSeries<int>
+                {
+                    Values = pie.Values,
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                    DataLabelsSize = 12,
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsFormatter = point => $"{pie.Name} : {point.PrimaryValue.ToString("N2")}",
+                };
+
+                if (pie.HexColor != null)
+                    s.Fill = GetColorFromHex(pie.HexColor);
+
+                series.Add(s);
+            }
+            var chart = new PieChart
+            {
+                Height = 400,
+                Width = 400,
+                Series = series,
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                FontFamily = new System.Windows.Media.FontFamily("Arial"),
+                SnapsToDevicePixels = true,
+                UseLayoutRounding = true,
+                
+            };
+            panel.Children.Add(chart);
         }
 
         private byte[] ConvertBitmapToBytes(Bitmap bitmap)

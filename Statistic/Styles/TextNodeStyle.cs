@@ -35,7 +35,7 @@ namespace wcheck.Statistic.Styles
 
     }
     [BitSerializable]
-    public struct WpfThinkness
+    public class WpfThinkness
     {
         public double Left { get; set; }
         public double Right { get; set; }

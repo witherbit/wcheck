@@ -35,7 +35,13 @@ namespace DocxEngine.Models
         {
             if(Style.IsHyperlink && Style.HyperlinkUrl != null)
             {
-                body.Append(GetParagraphWithHyperlink(document));
+                var cText = Text;
+                foreach (var txt in Text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    Text = txt;
+                    body.Append(GetParagraphWithHyperlink(document));
+                }
+                Text = cText;
             }
             else
                 body.Append(GetParagraph());
@@ -161,12 +167,13 @@ namespace DocxEngine.Models
             paragraph.GetFirstChild<Run>().PrependChild(runProperties);
             return paragraph;
         }
+        static int global = 0;
         internal Paragraph GetParagraphWithHyperlink(WordprocessingDocument document)
         {
             Paragraph paragraph = new Paragraph(new Run(new Text(Text)));
             if (Style.IsHyperlink && Style.HyperlinkUrl != null)
             {
-                string hyperid = "hid_" + ((int)Guid.NewGuid().ToByteArray()[0] +(int)Guid.NewGuid().ToByteArray().Last());
+                string hyperid = "hid_" + global++;
                 MainDocumentPart mainPart = document.MainDocumentPart;
                 mainPart.AddHyperlinkRelationship(new System.Uri(Style.HyperlinkUrl), true, hyperid);
                 Hyperlink hyperlink = new Hyperlink(new Run(new Text(Text))) { Id = hyperid };

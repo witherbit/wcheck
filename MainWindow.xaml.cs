@@ -1,4 +1,6 @@
-﻿using DocxEngine;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using DocxEngine;
+using pwither.formatter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +21,12 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 using wcheck.Documents;
 using wcheck.Pages;
+using wcheck.Statistic.Enums;
+using wcheck.Statistic;
 using wcheck.Statistic.Items;
+using wcheck.Statistic.Nodes;
+using wcheck.Statistic.Styles;
+using wcheck.Statistic.Templates;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
 
@@ -229,7 +236,38 @@ namespace wcheck
                 ShellHost.AddPage(new SettingsPage());
             }
             else if (item == uiMenuItem_0x2) ;
-            else if (item == uiMenuItem_0x1) ;
+            else if (item == uiMenuItem_0x1)
+            {
+                Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+                dlg.DefaultExt = ".wstat";
+                dlg.Filter = "wcheck statistic Files (*.wstat)|*.wstat";
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    string filename = dlg.FileName;
+                    var engine = BitSerializer.DeserializeNative<StatisticEngine>(File.ReadAllBytes(filename),
+                            typeof(StatisticEngine),
+                            typeof(TextStatisticNode),
+                            typeof(TextAligment),
+                            typeof(CeilItem),
+                            typeof(ImageItem),
+                            typeof(PieItem),
+                            typeof(BreakStatisticNode),
+                            typeof(ImageStatisticNode),
+                            typeof(PieStatisticNode),
+                            typeof(TableStatisticNode),
+                            typeof(TextStatisticNode),
+                            typeof(ImageNodeStyle),
+                            typeof(TableNodeStyle),
+                            typeof(TextNodeStyle),
+                            typeof(IStatisticNode),
+                            typeof(IStatisticTemplate),
+                            typeof(List<IStatisticNode>),
+                            typeof(NetHandleStatisticTemplate),
+                            typeof(WpfThinkness));
+                    ShellHost.AddPage(new StatisticPage(engine));
+                }
+            }
             else if (item == uiMenuItem_0x0) ;
 
             //1 modules
