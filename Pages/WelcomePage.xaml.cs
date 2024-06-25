@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using wcheck.Utils;
 using wcheck.wcontrols;
+using wshell.Abstract;
 
 namespace wcheck.Pages
 {
@@ -29,9 +30,11 @@ namespace wcheck.Pages
     /// </summary>
     public partial class WelcomePage : Page
     {
+        internal static WelcomePage Instance { get; private set; }
         public WelcomePage()
         {
             InitializeComponent();
+            Instance = this;
             Logger.LogWrite += OnLogWrite;
             uiTextBoxIp.Text = GetIp();
             uiTextBoxOS.Text = GetOS();
@@ -39,6 +42,8 @@ namespace wcheck.Pages
             uiTextBoxMachineName.Text = GetName();
             uiTextBoxUser.Text = GetUser();
         }
+
+        public static void AddShell(ShellBase shell) => Instance.uiStackPanelShells.Children.Add(new wShellControl(shell.ShellInfo) { Margin = new Thickness(10, 10, 10, 5) });
 
         private void OnLogWrite(object? sender, LogContent e)
         {
@@ -56,7 +61,7 @@ namespace wcheck.Pages
 
             uiStackPanelLogs.Children.Add(new TextBox
             {
-                FontFamily = new FontFamily("Arial"),
+                FontFamily = new FontFamily("Cascadia Code"),
                 Text = log,
                 Foreground = brush,
                 TextWrapping = TextWrapping.Wrap,
@@ -65,47 +70,55 @@ namespace wcheck.Pages
                 BorderThickness = new Thickness(0),
                 Margin = new Thickness(0, 0, 0, 10)
             });
-            //uiScrollLogs.ScrollToEnd();
+            uiScrollLogs.ScrollToEnd();
         }
 
         private static string GetIp()
         {
-            string result = "?";
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            try
             {
-
-                var defGate = from nics in NetworkInterface.GetAllNetworkInterfaces()
-
-
-                                     from props in nics.GetIPProperties().GatewayAddresses
-                                     where nics.OperationalStatus == OperationalStatus.Up
-                                     select props.Address.ToString(); // this sets the default gateway in a variable
-
-                GatewayIPAddressInformationCollection prop = ni.GetIPProperties().GatewayAddresses;
-
-                if (defGate.First() != null)
+                string result = "?";
+                foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
                 {
 
-                    IPInterfaceProperties ipProps = ni.GetIPProperties();
+                    var defGate = from nics in NetworkInterface.GetAllNetworkInterfaces()
 
-                    foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+
+                                  from props in nics.GetIPProperties().GatewayAddresses
+                                  where nics.OperationalStatus == OperationalStatus.Up
+                                  select props.Address.ToString(); // this sets the default gateway in a variable
+
+                    GatewayIPAddressInformationCollection prop = ni.GetIPProperties().GatewayAddresses;
+
+                    if (defGate.First() != null)
                     {
 
-                        if (addr.Address.ToString().Contains(defGate.First().Remove(defGate.First().LastIndexOf(".")))) // The IP address of the computer is always a bit equal to the default gateway except for the last group of numbers. This splits it and checks if the ip without the last group matches the default gateway
+                        IPInterfaceProperties ipProps = ni.GetIPProperties();
+
+                        foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
                         {
 
-                            if (result == "?") // check if the string has been changed before
+                            if (addr.Address.ToString().Contains(defGate.First().Remove(defGate.First().LastIndexOf(".")))) // The IP address of the computer is always a bit equal to the default gateway except for the last group of numbers. This splits it and checks if the ip without the last group matches the default gateway
                             {
-                                result = addr.Address.ToString(); // put the ip address in a string that you can use.
+
+                                if (result == "?") // check if the string has been changed before
+                                {
+                                    result = addr.Address.ToString(); // put the ip address in a string that you can use.
+                                }
                             }
+
                         }
 
                     }
 
                 }
-
+                return result;
             }
-            return result;
+            catch
+            {
+                return "Недоступен";
+            }
+            
         }
         private static string GetOS()
         {

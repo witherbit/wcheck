@@ -29,6 +29,7 @@ using wcheck.Statistic.Styles;
 using wcheck.Statistic.Templates;
 using wcheck.wshell.Objects;
 using wshell.Abstract;
+using wcheck.Utils;
 
 namespace wcheck
 {
@@ -205,11 +206,13 @@ namespace wcheck
             {
                 uiMenuItem_2x0.Header = "Развернуть на весь экран";
                 SystemCommands.RestoreWindow(this);
+                rootGrid.Margin = new Thickness(0, 0, 0, 0);
             }
             else
             {
                 uiMenuItem_2x0.Header = "Вернуть в исходное состояние";
                 SystemCommands.MaximizeWindow(this);
+                rootGrid.Margin = new Thickness(0, 0, 0, 50);
             }
         }
 
@@ -275,6 +278,7 @@ namespace wcheck
             else if (item == uiMenuItem_1x0) ;
 
             //2 view
+            else if (item == uiMenuItem_2x2) Shooter.CaptureApplication();
             else if (item == uiMenuItem_2x1) SystemCommands.MinimizeWindow(this);
             else if (item == uiMenuItem_2x0) ToggleWindowState();
 
@@ -285,7 +289,7 @@ namespace wcheck
             else if (item == uiMenuItem_3x0)
             {
                 ShellHost.AddPage(new LicenseUpdatePage());
-            } 
+            }
 
             //4 help
             else if (item == uiMenuItem_4x3)

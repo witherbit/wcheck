@@ -34,7 +34,7 @@
             </Border>
         </StackPanel>
 
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" VirtualizingPanel.IsVirtualizing="True">
             <StackPanel x:Name="uiPanel"/>
         </ScrollViewer>
     </Grid>

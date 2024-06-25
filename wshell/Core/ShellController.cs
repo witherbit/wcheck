@@ -52,6 +52,7 @@ namespace wshell.Core
                             {
                                 Logger.Log(new LogContent($"Shell {shell.ShellInfo.Id.ToString()} allowed", this));
                                 _shells.Add(shell);
+                                WelcomePage.AddShell(shell);
                             }
                             else
                             {

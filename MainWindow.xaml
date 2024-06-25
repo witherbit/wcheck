@@ -255,6 +255,10 @@
                                   Name="uiMenuItem_2x1"
                                   Click="MenuItem_Click"
                                   />
+                        <MenuItem Header="Сделать скриншот"
+          Name="uiMenuItem_2x2"
+          Click="MenuItem_Click"
+          />
                     </MenuItem>
                     <MenuItem Header="Лицензия" Name="uiMenuItem_3" Visibility="Collapsed">
                         <MenuItem Header="Обновить данные лицензии"

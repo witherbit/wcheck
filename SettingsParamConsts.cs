@@ -10,8 +10,8 @@ namespace wcheck
 {
     public static class SettingsParamConsts
     {
-        public static readonly string Build = "0.9.6";
-        public static readonly string BuildType = "beta";
+        public static readonly string Build = "1.0.1";
+        public static readonly string BuildType = "release";
         public static readonly string Company = "witherbit";
         public static readonly string Author = "Сизов А.И.";
         public static readonly string Support = "xttwercs@vk.com";
